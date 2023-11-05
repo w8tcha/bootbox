@@ -10,9 +10,9 @@ describe('bootbox locales', function() {
         return true;
       });
       return this.labels = {
-        ok: d1.find('.btn:first').text(),
-        cancel: d2.find('.btn:first').text(),
-        confirm: d2.find('.btn:last').text()
+        ok: d1.querySelector('.btn:first-child').textContent,
+        cancel: d2.querySelector('.btn:first-child').textContent,
+        confirm: d2.querySelector('.btn:last-child').textContent
       };
     };
   });

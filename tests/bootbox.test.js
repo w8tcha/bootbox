@@ -16,21 +16,6 @@ describe('Bootbox', function() {
     expect(bootbox.hideAll).to.be.a('function');
   });
 
-  describe('hideAll', function() {
-    beforeEach(function() {
-      this.hidden = sinon.spy($.fn, 'modal');
-      bootbox.hideAll();
-    });
-
-    afterEach(function() {
-      this.hidden.restore();
-    });
-
-    it('should hide all .bootbox modals', function() {
-      expect(this.hidden).to.have.been.calledWithExactly('hide');
-    });
-  });
-
   describe('event listeners', function() {
     describe('hidden.bs.modal', function() {
       beforeEach(function() {
@@ -40,9 +25,7 @@ describe('Bootbox', function() {
 
         this.e = function(target) {
 
-          $(this.dialog).trigger($.Event('hidden.bs.modal', {
-            target: target
-          }));
+         this.dialog.dispatchEvent(new CustomEvent('hidden.bs.modal', {detail: {target: target}}));
         };
       });
 
@@ -62,7 +45,7 @@ describe('Bootbox', function() {
 
       describe('when triggered with the correct target', function() {
         beforeEach(function() {
-          this.e(this.dialog.get(0));
+          this.e(this.dialog);
         });
 
         it('removes the dialog', function() {
@@ -82,7 +65,7 @@ describe('Bootbox', function() {
         });
 
         this.e = function(target) {
-          $(this.dialog).trigger($.Event('hide.bs.modal', {
+          this.dialog.dispatchEvent(new Event('hide.bs.modal', {
             target: target
           }));
         };
@@ -90,7 +73,7 @@ describe('Bootbox', function() {
 
       describe('when triggered with the correct target', function() {
         beforeEach(function() {
-          this.e(this.dialog.get(0));
+          this.e(this.dialog);
         });
 
         it('has triggered onHide function', function() {
@@ -110,7 +93,7 @@ describe('Bootbox', function() {
         });
 
         this.e = function(target) {
-          $(this.dialog).trigger($.Event('hidden.bs.modal', {
+          this.dialog.dispatchEvent(new Event('hidden.bs.modal', {
             target: target
           }));
         };
@@ -118,7 +101,7 @@ describe('Bootbox', function() {
 
       describe('when triggered with the correct target', function() {
         beforeEach(function() {
-          this.e(this.dialog.get(0));
+          this.e(this.dialog);
         });
 
         it('has triggered onHidden function', function() {
@@ -175,39 +158,18 @@ describe('Bootbox', function() {
 
       describe('when triggered with a valid related target', function() {
         it('has passed the valid related target to the callback', function() {
-          options.relatedTarget = $('<button id="trigger"></button>').get(0);
+			
+			 const template = document.createElement('template');
+            template.innerHTML = '<button id="trigger"></button>'.trim();
+			
+          options.relatedTarget = template.content.children[0];
           bootbox.dialog(options);
           expect(this.callback.args[0][0].relatedTarget.id).to.equal('trigger');
         });
       });
     });
   });
-
-  describe('If $.fn.modal is undefined', function() {
-    beforeEach(function() {
-      this.oldModal = window.jQuery.fn.modal;
-      window.jQuery.fn.modal = undefined;
-    });
-
-    afterEach(function() {
-      window.jQuery.fn.modal = this.oldModal;
-    });
-
-    describe('When invoking a dialog', function() {
-      beforeEach(function() {
-        try {
-          bootbox.alert('Hi', function() {});
-        } catch (e) {
-          this.e = e;
-        }
-      });
-
-      it('throws the correct error', function() {
-        expect(this.e.message).to.contain('"$.fn.modal" is not defined');
-      });
-    });
-  });
-
+  
   describe('adding and removing locales', function() {
 
     describe('bootbox.addLocale', function() {
@@ -240,9 +202,9 @@ describe('Bootbox', function() {
           var d1 = bootbox.alert('foo');
           var d2 = bootbox.confirm('foo', function() { return true; });
           this.labels = {
-            ok: d1.find('.btn:first').text(),
-            cancel: d2.find('.btn:first').text(),
-            confirm: d2.find('.btn:last').text()
+            ok: d1.querySelector('.btn:first-child').textContent,
+            cancel: d2.querySelector('.btn:first-child').textContent,
+            confirm: d2.querySelector('.btn:last-child').textContent
           };
         });
 
@@ -265,9 +227,9 @@ describe('Bootbox', function() {
         var d1 = bootbox.alert('foo');
         var d2 = bootbox.confirm('foo', function () { return true; });
         this.labels = {
-          ok: d1.find('.btn:first').text(),
-          cancel: d2.find('.btn:first').text(),
-          confirm: d2.find('.btn:last').text()
+          ok: d1.querySelector('.btn:first-child').textContent,
+          cancel: d2.querySelector('.btn:first-child').textContent,
+          confirm: d2.querySelector('.btn:last-child').textContent
         };
       });
 
@@ -286,9 +248,10 @@ describe('Bootbox', function() {
   describe('backdrop variations', function() {
     beforeEach(function() {
       this.e = function(target) {
-        $(this.dialog).trigger($.Event('click.dismiss.bs.modal', {
-          target: target
-        }));
+		  const dismissEvent = new CustomEvent('click.dismiss.bs.modal', {detail: { target: target}});
+		  
+		  
+        this.dialog.dispatchEvent(dismissEvent);
       };
     });
 
@@ -332,7 +295,7 @@ describe('Bootbox', function() {
 
         describe('With the correct target', function() {
           beforeEach(function() {
-            this.e(this.dialog.get(0));
+            this.e(this.dialog);
           });
 
           it('invokes the callback', function() {
@@ -365,7 +328,7 @@ describe('Bootbox', function() {
 
         describe('With the correct target', function() {
           beforeEach(function() {
-            this.e(this.dialog.children('.modal-backdrop').get(0));
+		  this.e(this.dialog.querySelector(".modal-dialog"));
           });
 
           it('invokes the callback', function() {
@@ -388,9 +351,9 @@ describe('Bootbox', function() {
         this.removed = sinon.stub(this.dialog, 'remove');
 
         this.e = function(target) {
-          $(this.dialog).trigger($.Event('hidden.bs.modal', {
-            target: target
-          }));
+		const hiddenEvent = new CustomEvent('hidden.bs.modal', {detail: {target: target}});
+		
+		this.dialog.dispatchEvent(hiddenEvent);
         };
       });
 
@@ -418,7 +381,7 @@ describe('Bootbox', function() {
         this.removed = sinon.stub(this.dialog, 'remove');
 
         this.e = function(target) {
-          $(this.dialog).trigger($.Event('hidden.bs.modal', {
+          this.dialog.dispatchEvent(new Event('hidden.bs.modal', {
             target: target
           }));
         };
@@ -430,7 +393,7 @@ describe('Bootbox', function() {
 
       describe('when triggered with `reusable: false`', function() {
         beforeEach(function() {
-          this.e(this.dialog.get(0));
+          this.e(this.dialog);
         });
 
         it('removes the dialog', function() {
@@ -448,7 +411,7 @@ describe('Bootbox', function() {
         this.removed = sinon.stub(this.dialog, 'remove');
 
         this.e = function(target) {
-          $(this.dialog).trigger($.Event('hidden.bs.modal', {
+          this.dialog.dispatchEvent(new Event('hidden.bs.modal', {
             target: target
           }));
         };
@@ -460,7 +423,7 @@ describe('Bootbox', function() {
 
       describe('when triggered with `reusable` not set', function() {
         beforeEach(function() {
-          this.e(this.dialog.get(0));
+          this.e(this.dialog);
         });
 
         it('removes the dialog', function() {

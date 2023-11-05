@@ -56,11 +56,18 @@ module.exports = function (grunt) {
         karma: {
             current: {
                 configFile: 'karma.conf.js'
-            },
-            legacy: {
-                configFile: 'karma.conf.legacy.js'
             }
         },
+		
+		devUpdate: {
+            main: {
+                options: {
+                    reportUpdated: true,
+					updateType: "force",
+					semver: false
+                }
+            }
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-concat');
@@ -68,6 +75,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-karma');
+	grunt.loadNpmTasks("@w8tcha/grunt-dev-update");
 
     grunt.registerTask('default', ['concat', 'jsbeautifier', 'uglify', 'jshint', 'karma']);
 };  

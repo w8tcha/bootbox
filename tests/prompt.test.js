@@ -4,10 +4,10 @@ describe('bootbox.prompt', function () {
   beforeEach(function () {
     window.bootbox = bootbox.init();
     this.find = function (selector) {
-      return this.dialog.find(selector);
+      return this.dialog.querySelector(selector);
     };
     this.text = function (selector) {
-      return this.find(selector).text();
+      return this.find(selector).textContent;
     };
     return this.exists = function (selector) {
       return this.find(selector).length !== 0;
@@ -92,22 +92,22 @@ describe('bootbox.prompt', function () {
             return expect(this.create).not.to.throw(Error);
           });
           it('creates a dialog object', function () {
-            return expect(this.dialog).to.be.an('object');
+            return expect(bootstrap.Modal.getInstance(this.dialog)).to.be.an('object');
           });
           it('applies the bootbox-prompt class to the dialog', function () {
-            return expect(this.dialog.hasClass('bootbox-prompt')).to.be.true;
+            return expect(this.dialog.classList.contains('bootbox-prompt')).to.be.true;
           });
           it('adds the correct button labels', function () {
-            expect(this.dialog.find('.btn:first').text()).to.equal('Cancel');
-            return expect(this.dialog.find('.btn:last').text()).to.equal('OK');
+            expect(this.dialog.querySelector('.btn:first-child').textContent).to.equal('Cancel');
+            return expect(this.dialog.querySelector('.btn:last-child').textContent).to.equal('OK');
           });
           return it('adds the correct button classes', function () {
-            expect(this.dialog.find('.btn:first').hasClass('btn-default')).to.be.true;
-            expect(this.dialog.find('.btn:first').hasClass('btn-secondary')).to.be.true;
-            expect(this.dialog.find('.btn:first').hasClass('bootbox-cancel')).to.be.true;
+            expect(this.dialog.querySelector('.btn:first-child').classList.contains('btn-default')).to.be.true;
+            expect(this.dialog.querySelector('.btn:first-child').classList.contains('btn-secondary')).to.be.true;
+            expect(this.dialog.querySelector('.btn:first-child').classList.contains('bootbox-cancel')).to.be.true;
   
-            expect(this.dialog.find('.btn:last').hasClass('btn-primary')).to.be.true;
-            return expect(this.dialog.find('.btn:last').hasClass('bootbox-accept')).to.be.true;
+            expect(this.dialog.querySelector('.btn:last-child').classList.contains('btn-primary')).to.be.true;
+            return expect(this.dialog.querySelector('.btn:last-child').classList.contains('bootbox-accept')).to.be.true;
           });
         });
       });
@@ -143,34 +143,35 @@ describe('bootbox.prompt', function () {
           return expect(this.create).not.to.throw(Error);
         });
         it('creates a dialog object', function () {
-          return expect(this.dialog).to.be.an('object');
+          return expect(bootstrap.Modal.getInstance(this.dialog)).to.be.an('object');
         });
         it('adds the correct button labels', function () {
-          expect(this.text('.btn:first')).to.equal('Cancel');
-          return expect(this.text('.btn:last')).to.equal('OK');
+          expect(this.text('.btn:first-child')).to.equal('Cancel');
+          return expect(this.text('.btn:last-child')).to.equal('OK');
         });
         it('adds the correct button classes', function () {
-          expect(this.dialog.find('.btn:first').hasClass('btn-default')).to.be.true;
-          expect(this.dialog.find('.btn:first').hasClass('btn-secondary')).to.be.true;
-          expect(this.dialog.find('.btn:first').hasClass('bootbox-cancel')).to.be.true;
+          expect(this.dialog.querySelector('.btn:first-child').classList.contains('btn-default')).to.be.true;
+          expect(this.dialog.querySelector('.btn:first-child').classList.contains('btn-secondary')).to.be.true;
+          expect(this.dialog.querySelector('.btn:first-child').classList.contains('bootbox-cancel')).to.be.true;
 
-          expect(this.dialog.find('.btn:last').hasClass('btn-primary')).to.be.true;
-          return expect(this.dialog.find('.btn:last').hasClass('bootbox-accept')).to.be.true;
+          expect(this.dialog.querySelector('.btn:last-child').classList.contains('btn-primary')).to.be.true;
+          return expect(this.dialog.querySelector('.btn:last-child').classList.contains('bootbox-accept')).to.be.true;
         });
         it('adds the expected dialog title', function () {
           return expect(this.text('.modal-title')).to.equal('What is your name?');
         });
         it('adds a close button', function () {
-          return expect(this.dialog.find('.modal-header .close')).to.be.ok;
+          return expect(this.dialog.querySelector('.modal-header .close')).to.be.ok;
         });
         it('creates a form with a text input', function () {
-          return expect(this.dialog.find('form input[type=text]')).to.be.ok;
+          return expect(this.dialog.querySelector('form input[type=text]')).to.be.ok;
         });
         it('with no default value', function () {
-          return expect(this.dialog.find('form input[type="text"]').val()).to.equal('');
+          return expect(this.dialog.querySelector('form input[type="text"]').value).to.equal('');
         });
         return it('shows the dialog', function () {
-          return expect(this.dialog.is(':visible')).to.be.true;
+			var isVisible = !!(this.dialog.offsetWidth || this.dialog.offsetHeight || this.dialog.getClientRects().length);
+          return expect(isVisible).to.be.true;
         });
       });
     });
@@ -200,7 +201,7 @@ describe('bootbox.prompt', function () {
         this.create();
       });
       return it('adds the modal-dialog-centered class to the innerDialog of the prompt', function() {
-        return expect(this.dialog.children('.modal-dialog').hasClass('modal-dialog-centered')).to.be.true;
+        return expect(this.dialog.querySelector(".modal-dialog").classList.contains('modal-dialog-centered')).to.be.true;
       });
     });
 
@@ -212,7 +213,7 @@ describe('bootbox.prompt', function () {
         this.create();
       });
       return it('does not add the modal-dialog-centered class to the innerDialog of the prompt', function() {
-        return expect(this.dialog.children('.modal-dialog').hasClass('modal-dialog-centered')).to.be.false;
+        return expect(this.dialog.querySelector(".modal-dialog").classList.contains('modal-dialog-centered')).to.be.false;
       });
     });
 
@@ -226,11 +227,11 @@ describe('bootbox.prompt', function () {
           }
         };
         this.create();
-        return this.button = this.dialog.find('.btn:first');
+        return this.button = this.dialog.querySelector('.btn:first-child');
       });
       return it('adds the correct cancel button', function () {
-        expect(this.button.text()).to.equal('Custom cancel');
-        return expect(this.button.hasClass('btn-danger')).to.be.true;
+        expect(this.button.textContent).to.equal('Custom cancel');
+        return expect(this.button.classList.contains('btn-danger')).to.be.true;
       });
     });
 
@@ -244,11 +245,11 @@ describe('bootbox.prompt', function () {
           }
         };
         this.create();
-        return this.button = this.dialog.find('.btn:last');
+        return this.button = this.dialog.querySelector('.btn:last-child');
       });
       return it('adds the correct confirm button', function () {
-        expect(this.button.text()).to.equal('Custom confirm');
-        return expect(this.button.hasClass('btn-warning')).to.be.true;
+        expect(this.button.textContent).to.equal('Custom confirm');
+        return expect(this.button.classList.contains('btn-warning')).to.be.true;
       });
     });
 
@@ -303,8 +304,8 @@ describe('bootbox.prompt', function () {
           return expect(this.exists('input[type="text"]')).to.be.true;
         });
         return it('has proper class', function () {
-          expect(this.find('input[type="text"]').hasClass('bootbox-input')).to.be.true;
-          return expect(this.find('input[type="text"]').hasClass('bootbox-input-text')).to.be.true;
+          expect(this.find('input[type="text"]').classList.contains('bootbox-input')).to.be.true;
+          return expect(this.find('input[type="text"]').classList.contains('bootbox-input-text')).to.be.true;
         });
       });
 
@@ -314,7 +315,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct default value', function () {
-          return expect(this.find('input[type="text"]').val()).to.equal('John Smith');
+          return expect(this.find('input[type="text"]').value).to.equal('John Smith');
         });
       });
 
@@ -324,7 +325,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct placeholder value', function () {
-          return expect(this.find('input[type="text"]').attr('placeholder')).to.equal('enter your name');
+          return expect(this.find('input[type="text"]').getAttribute('placeholder')).to.equal('enter your name');
         });
       });
 
@@ -334,7 +335,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct pattern value', function () {
-          return expect(this.find('input[type="text"]').attr('pattern')).to.equal('\d{1,2}/\d{1,2}/\d{4}');
+          return expect(this.find('input[type="text"]').getAttribute('pattern')).to.equal('\d{1,2}/\d{1,2}/\d{4}');
         });
       });
 
@@ -344,7 +345,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct maxlength value', function () {
-          return expect(this.find('input[type="text"]').attr('maxlength')).to.equal('5');
+          return expect(this.find('input[type="text"]').getAttribute('maxlength')).to.equal('5');
         });
       });
     });
@@ -362,8 +363,8 @@ describe('bootbox.prompt', function () {
           return expect(this.exists('textarea')).to.be.true;
         });
         return it('has proper class', function () {
-          expect(this.find('textarea').hasClass('bootbox-input')).to.be.true;
-          return expect(this.find('textarea').hasClass('bootbox-input-textarea')).to.be.true;
+          expect(this.find('textarea').classList.contains('bootbox-input')).to.be.true;
+          return expect(this.find('textarea').classList.contains('bootbox-input-textarea')).to.be.true;
         });
       });
 
@@ -373,7 +374,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct default value', function () {
-          return expect(this.find('textarea').val()).to.equal('Once upon a time...');
+          return expect(this.find('textarea').value).to.equal('Once upon a time...');
         });
       });
 
@@ -383,7 +384,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct placeholder value', function () {
-          return expect(this.find('textarea').attr('placeholder')).to.equal('enter your favorite fairy tale');
+          return expect(this.find('textarea').getAttribute('placeholder')).to.equal('enter your favorite fairy tale');
         });
       });
       
@@ -393,7 +394,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct rows value', function () {
-          return expect(this.find('textarea').attr('rows')).to.equal('6');
+          return expect(this.find('textarea').getAttribute('rows')).to.equal('6');
         });
       });
     });
@@ -411,8 +412,8 @@ describe('bootbox.prompt', function () {
           return expect(this.exists('input[type="email"]')).to.be.true;
         });
         return it('has proper class', function () {
-          expect(this.find('input[type="email"]').hasClass('bootbox-input')).to.be.true;
-          return expect(this.find('input[type="email"]').hasClass('bootbox-input-email')).to.be.true;
+          expect(this.find('input[type="email"]').classList.contains('bootbox-input')).to.be.true;
+          return expect(this.find('input[type="email"]').classList.contains('bootbox-input-email')).to.be.true;
         });
       });
       describe('with default value', function () {
@@ -421,7 +422,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct default value', function () {
-          return expect(this.find('input[type="email"]').val()).to.equal('john@smith.com');
+          return expect(this.find('input[type="email"]').value).to.equal('john@smith.com');
         });
       });
       describe('with placeholder', function () {
@@ -430,7 +431,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct placeholder value', function () {
-          return expect(this.find('input[type="email"]').attr('placeholder')).to.equal('enter your email');
+          return expect(this.find('input[type="email"]').getAttribute('placeholder')).to.equal('enter your email');
         });
       });
       describe('with pattern', function () {
@@ -439,7 +440,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct pattern value', function () {
-          return expect(this.find('input[type="email"]').attr('pattern')).to.equal('\d{1,2}/\d{1,2}/\d{4}');
+          return expect(this.find('input[type="email"]').getAttribute('pattern')).to.equal('\d{1,2}/\d{1,2}/\d{4}');
         });
       });
     });
@@ -457,8 +458,8 @@ describe('bootbox.prompt', function () {
           return expect(this.exists('input[type="password"]')).to.be.true;
         });
         return it('has proper class', function () {
-          expect(this.find('input[type="password"]').hasClass('bootbox-input')).to.be.true;
-          return expect(this.find('input[type="password"]').hasClass('bootbox-input-password')).to.be.true;
+          expect(this.find('input[type="password"]').classList.contains('bootbox-input')).to.be.true;
+          return expect(this.find('input[type="password"]').classList.contains('bootbox-input-password')).to.be.true;
         });
       });
       describe('with default value', function () {
@@ -467,7 +468,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct default value', function () {
-          return expect(this.find('input[type="password"]').val()).to.equal('qwerty');
+          return expect(this.find('input[type="password"]').value).to.equal('qwerty');
         });
       });
       describe('with placeholder', function () {
@@ -476,7 +477,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct placeholder value', function () {
-          return expect(this.find('input[type="password"]').attr('placeholder')).to.equal('enter your password');
+          return expect(this.find('input[type="password"]').getAttribute('placeholder')).to.equal('enter your password');
         });
       });
     });
@@ -572,11 +573,11 @@ describe('bootbox.prompt', function () {
           return expect(this.exists('select')).to.be.true;
         });
         it('has proper class', function () {
-          expect(this.find('select').hasClass('bootbox-input')).to.be.true;
-          return expect(this.find('select').hasClass('bootbox-input-select')).to.be.true;
+          expect(this.find('select').classList.contains('bootbox-input')).to.be.true;
+          return expect(this.find('select').classList.contains('bootbox-input-select')).to.be.true;
         });
         return it('with three options', function () {
-          return expect(this.find('option').length).to.equal(3);
+          return expect(this.dialog.querySelectorAll('option').length).to.equal(3);
         });
       });
       describe('with zero as the first option', function () {
@@ -637,14 +638,14 @@ describe('bootbox.prompt', function () {
           return expect(this.exists('select')).to.be.true;
         });
         it('has proper class', function () {
-          expect(this.find('select').hasClass('bootbox-input')).to.be.true;
-          return expect(this.find('select').hasClass('bootbox-input-select')).to.be.true;
+          expect(this.find('select').classList.contains('bootbox-input')).to.be.true;
+          return expect(this.find('select').classList.contains('bootbox-input-select')).to.be.true;
         });
         it('with two option group', function () {
-          return expect(this.find('optgroup').length).to.equal(2);
+          return expect(this.dialog.querySelectorAll('optgroup').length).to.equal(2);
         });
         return it('with four options', function () {
-          return expect(this.find('option').length).to.equal(4);
+          return expect(this.dialog.querySelectorAll('option').length).to.equal(4);
         });
       });
     });
@@ -693,11 +694,11 @@ describe('bootbox.prompt', function () {
           return expect(this.exists('input[type="checkbox"]')).to.be.true;
         });
         it('has proper class', function () {
-          expect(this.find('input[type="checkbox"]').hasClass('bootbox-input')).to.be.true;
-          return expect(this.find('input[type="checkbox"]').hasClass('bootbox-input-checkbox')).to.be.true;
+          expect(this.find('input[type="checkbox"]').classList.contains('bootbox-input')).to.be.true;
+          return expect(this.find('input[type="checkbox"]').classList.contains('bootbox-input-checkbox')).to.be.true;
         });
         return it('with three checkboxes', function () {
-          return expect(this.find('input[type="checkbox"]').length).to.equal(3);
+          return expect(this.dialog.querySelectorAll('input[type="checkbox"]').length).to.equal(3);
         });
       });
     });
@@ -746,11 +747,11 @@ describe('bootbox.prompt', function () {
           return expect(this.exists('input[type="radio"]')).to.be.true;
         });
         it('has proper class', function () {
-          expect(this.find('input[type="radio"]').hasClass('bootbox-input')).to.be.true;
-          return expect(this.find('input[type="radio"]').hasClass('bootbox-input-radio')).to.be.true;
+          expect(this.find('input[type="radio"]').classList.contains('bootbox-input')).to.be.true;
+          return expect(this.find('input[type="radio"]').classList.contains('bootbox-input-radio')).to.be.true;
         });
         return it('with three radios', function () {
-          return expect(this.find('input[type="radio"]').length).to.equal(3);
+          return expect(this.dialog.querySelectorAll('input[type="radio"]').length).to.equal(3);
         });
       });
       describe('with an invalid value', function () {
@@ -789,8 +790,8 @@ describe('bootbox.prompt', function () {
           return expect(this.exists('input[type="date"]')).to.be.true;
         });
         return it('has proper class', function () {
-          expect(this.find('input[type="date"]').hasClass('bootbox-input')).to.be.true;
-          return expect(this.find('input[type="date"]').hasClass('bootbox-input-date')).to.be.true;
+          expect(this.find('input[type="date"]').classList.contains('bootbox-input')).to.be.true;
+          return expect(this.find('input[type="date"]').classList.contains('bootbox-input-date')).to.be.true;
         });
       });
       describe('with default value', function () {
@@ -799,7 +800,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct default value', function () {
-          return expect(this.find('input[type="date"]').val()).to.equal('2005-08-17');
+          return expect(this.find('input[type="date"]').value).to.equal('2005-08-17');
         });
       });
       describe('with placeholder', function () {
@@ -808,7 +809,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct placeholder value', function () {
-          return expect(this.find('input[type="date"]').attr('placeholder')).to.equal('enter the date');
+          return expect(this.find('input[type="date"]').getAttribute('placeholder')).to.equal('enter the date');
         });
       });
       describe('with pattern', function () {
@@ -817,7 +818,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct pattern value', function () {
-          return expect(this.find('input[type="date"]').attr('pattern')).to.equal('\d{1,2}/\d{1,2}/\d{4}');
+          return expect(this.find('input[type="date"]').getAttribute('pattern')).to.equal('\d{1,2}/\d{1,2}/\d{4}');
         });
       });
     });
@@ -835,8 +836,8 @@ describe('bootbox.prompt', function () {
           return expect(this.exists('input[type="time"]')).to.be.true;
         });
         return it('has proper class', function () {
-          expect(this.find('input[type="time"]').hasClass('bootbox-input')).to.be.true;
-          return expect(this.find('input[type="time"]').hasClass('bootbox-input-time')).to.be.true;
+          expect(this.find('input[type="time"]').classList.contains('bootbox-input')).to.be.true;
+          return expect(this.find('input[type="time"]').classList.contains('bootbox-input-time')).to.be.true;
         });
       });
       describe('with default value', function () {
@@ -845,7 +846,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct default value', function () {
-          return expect(this.find('input[type="time"]').val()).to.equal('19:02');
+          return expect(this.find('input[type="time"]').value).to.equal('19:02');
         });
       });
       describe('with placeholder', function () {
@@ -854,7 +855,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct placeholder value', function () {
-          return expect(this.find('input[type="time"]').attr('placeholder')).to.equal('enter the time');
+          return expect(this.find('input[type="time"]').getAttribute('placeholder')).to.equal('enter the time');
         });
       });
       describe('with pattern', function () {
@@ -863,7 +864,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct pattern value', function () {
-          return expect(this.find('input[type="time"]').attr('pattern')).to.equal('\d{1,2}/\d{1,2}/\d{4}');
+          return expect(this.find('input[type="time"]').getAttribute('pattern')).to.equal('\d{1,2}/\d{1,2}/\d{4}');
         });
       });
       describe('with min value', function () {
@@ -872,7 +873,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct min value', function () {
-          return expect(this.find('input[type="time"]').attr('min')).to.equal('00:00:00');
+          return expect(this.find('input[type="time"]').getAttribute('min')).to.equal('00:00:00');
         });
       });
       describe('with max value', function () {
@@ -881,7 +882,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct max value', function () {
-          return expect(this.find('input[type="time"]').attr('max')).to.equal('23:59:59');
+          return expect(this.find('input[type="time"]').getAttribute('max')).to.equal('23:59:59');
         });
       });
       describe('with step value', function () {
@@ -890,7 +891,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct step value', function () {
-          return expect(this.find('input[type="time"]').attr('step')).to.equal('10');
+          return expect(this.find('input[type="time"]').getAttribute('step')).to.equal('10');
         });
       });
       describe('with an invalid min value', function () {
@@ -943,8 +944,8 @@ describe('bootbox.prompt', function () {
           return expect(this.exists('input[type="number"]')).to.be.true;
         });
         return it('has proper class', function () {
-          expect(this.find('input[type="number"]').hasClass('bootbox-input')).to.be.true;
-          return expect(this.find('input[type="number"]').hasClass('bootbox-input-number')).to.be.true;
+          expect(this.find('input[type="number"]').classList.contains('bootbox-input')).to.be.true;
+          return expect(this.find('input[type="number"]').classList.contains('bootbox-input-number')).to.be.true;
         });
       });
       describe('with default value', function () {
@@ -953,7 +954,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct default value', function () {
-          return expect(this.find('input[type="number"]').val()).to.equal('300');
+          return expect(this.find('input[type="number"]').value).to.equal('300');
         });
       });
       describe('with placeholder', function () {
@@ -962,7 +963,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct placeholder value', function () {
-          return expect(this.find('input[type="number"]').attr('placeholder')).to.equal('enter the number');
+          return expect(this.find('input[type="number"]').getAttribute('placeholder')).to.equal('enter the number');
         });
       });
       describe('with min int value', function () {
@@ -971,7 +972,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct min value', function () {
-          return expect(this.find('input[type="number"]').attr('min')).to.equal('0');
+          return expect(this.find('input[type="number"]').getAttribute('min')).to.equal('0');
         });
       });
       describe('with min decimal value', function () {
@@ -980,7 +981,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct min value', function () {
-          return expect(this.find('input[type="number"]').attr('min')).to.equal('-99.99');
+          return expect(this.find('input[type="number"]').getAttribute('min')).to.equal('-99.99');
         });
       });
       describe('with max int value', function () {
@@ -989,7 +990,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct max value', function () {
-          return expect(this.find('input[type="number"]').attr('max')).to.equal('100');
+          return expect(this.find('input[type="number"]').getAttribute('max')).to.equal('100');
         });
       });
       describe('with max decimal value', function () {
@@ -998,7 +999,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct max value', function () {
-          return expect(this.find('input[type="number"]').attr('max')).to.equal('99.99');
+          return expect(this.find('input[type="number"]').getAttribute('max')).to.equal('99.99');
         });
       });
       describe('with step int value', function () {
@@ -1007,7 +1008,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct step value', function () {
-          return expect(this.find('input[type="number"]').attr('step')).to.equal('10');
+          return expect(this.find('input[type="number"]').getAttribute('step')).to.equal('10');
         });
       });
       describe('with step decimal value', function () {
@@ -1016,7 +1017,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct step value', function () {
-          return expect(this.find('input[type="number"]').attr('step')).to.equal('0.01');
+          return expect(this.find('input[type="number"]').getAttribute('step')).to.equal('0.01');
         });
       });
       describe('with an invalid min value', function () {
@@ -1081,8 +1082,8 @@ describe('bootbox.prompt', function () {
           return expect(this.exists('input[type="range"]')).to.be.true;
         });
         return it('has proper class', function () {
-          expect(this.find('input[type="range"]').hasClass('bootbox-input')).to.be.true;
-          return expect(this.find('input[type="range"]').hasClass('bootbox-input-range')).to.be.true;
+          expect(this.find('input[type="range"]').classList.contains('bootbox-input')).to.be.true;
+          return expect(this.find('input[type="range"]').classList.contains('bootbox-input-range')).to.be.true;
         });
       });
 
@@ -1094,7 +1095,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct default value', function () {
-          return expect(this.find('input[type="range"]').val()).to.equal('50');
+          return expect(this.find('input[type="range"]').value).to.equal('50');
         });
       });
 
@@ -1104,7 +1105,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct min value', function () {
-          return expect(this.find('input[type="range"]').attr('min')).to.equal('0');
+          return expect(this.find('input[type="range"]').getAttribute('min')).to.equal('0');
         });
       });
 
@@ -1114,7 +1115,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct max value', function () {
-          return expect(this.find('input[type="range"]').attr('max')).to.equal('100');
+          return expect(this.find('input[type="range"]').getAttribute('max')).to.equal('100');
         });
       });
 
@@ -1124,7 +1125,7 @@ describe('bootbox.prompt', function () {
           return this.create();
         });
         return it('has correct step value', function () {
-          return expect(this.find('input[type="range"]').attr('step')).to.equal('10');
+          return expect(this.find('input[type="range"]').getAttribute('step')).to.equal('10');
         });
       });
 
@@ -1180,12 +1181,12 @@ describe('bootbox.prompt', function () {
           title: 'What is your name?',
           callback: this.callback
         });
-        return this.hidden = sinon.spy(this.dialog, 'modal');
+        return this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
       });
       describe('when entering no value in the text input', function () {
         describe('when dismissing the dialog by clicking OK', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-accept').trigger('click');
+            return this.dialog.querySelector('.bootbox-accept').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1197,12 +1198,12 @@ describe('bootbox.prompt', function () {
             return expect(this.callback).to.have.been.calledWithExactly('');
           });
           return it('should hide the modal', function () {
-            return expect(this.hidden).to.have.been.calledWithExactly('hide');
+            return expect(this.hidden).to.have.been.calledWithExactly();
           });
         });
         describe('when submitting the form', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-form').trigger('submit');
+            return this.dialog.querySelector('.bootbox-form').dispatchEvent(new Event('submit'));
           });
           it('invokes the callback with the correct value', function () {
             return expect(this.callback).to.have.been.calledWithExactly('');
@@ -1211,17 +1212,17 @@ describe('bootbox.prompt', function () {
             return expect(this.callback.thisValues[0]).to.equal(this.dialog);
           });
           return it('should hide the modal', function () {
-            return expect(this.hidden).to.have.been.calledWithExactly('hide');
+            return expect(this.hidden).to.have.been.calledWithExactly();
           });
         });
       });
       describe('when entering a value in the text input', function () {
         beforeEach(function () {
-          return this.dialog.find('.bootbox-input').val('Test input');
+          return this.dialog.querySelector('.bootbox-input').value = 'Test input';
         });
         describe('when dismissing the dialog by clicking OK', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-accept').trigger('click');
+            return this.dialog.querySelector('.bootbox-accept').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1233,12 +1234,12 @@ describe('bootbox.prompt', function () {
             return expect(this.callback).to.have.been.calledWithExactly('Test input');
           });
           return it('should hide the modal', function () {
-            return expect(this.hidden).to.have.been.calledWithExactly('hide');
+            return expect(this.hidden).to.have.been.calledWithExactly();
           });
         });
         describe('when submitting the form', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-form').trigger('submit');
+            return this.dialog.querySelector('.bootbox-form').dispatchEvent(new Event('submit'));
           });
           it('invokes the callback with the correct value', function () {
             return expect(this.callback).to.have.been.calledWithExactly('Test input');
@@ -1247,13 +1248,13 @@ describe('bootbox.prompt', function () {
             return expect(this.callback.thisValues[0]).to.equal(this.dialog);
           });
           return it('should hide the modal', function () {
-            return expect(this.hidden).to.have.been.calledWithExactly('hide');
+            return expect(this.hidden).to.have.been.calledWithExactly();
           });
         });
       });
       describe('when dismissing the dialog by clicking Cancel', function () {
         beforeEach(function () {
-          return this.dialog.find('.bootbox-cancel').trigger('click');
+          return this.dialog.querySelector('.bootbox-cancel').click();
         });
         it('should invoke the callback', function () {
           return expect(this.callback).to.have.been.called;
@@ -1265,12 +1266,12 @@ describe('bootbox.prompt', function () {
           return expect(this.callback).to.have.been.calledWithExactly(null);
         });
         return it('should hide the modal', function () {
-          return expect(this.hidden).to.have.been.calledWithExactly('hide');
+          return expect(this.hidden).to.have.been.calledWithExactly();
         });
       });
       describe('when triggering the escape event', function () {
         beforeEach(function () {
-          return this.dialog.trigger('escape.close.bb');
+          return this.dialog.dispatchEvent(new Event('escape.close.bb'));
         });
         it('should invoke the callback', function () {
           return expect(this.callback).to.have.been.called;
@@ -1282,12 +1283,12 @@ describe('bootbox.prompt', function () {
           return expect(this.callback).to.have.been.calledWithExactly(null);
         });
         return it('should hide the modal', function () {
-          return expect(this.hidden).to.have.been.calledWithExactly('hide');
+          return expect(this.hidden).to.have.been.calledWithExactly();
         });
       });
       describe('when dismissing the dialog by clicking the close button', function () {
         beforeEach(function () {
-          return this.dialog.find('.close').trigger('click');
+          return this.dialog.querySelector('.close').click();
         });
         it('should invoke the callback', function () {
           return expect(this.callback).to.have.been.called;
@@ -1299,7 +1300,7 @@ describe('bootbox.prompt', function () {
           return expect(this.callback).to.have.been.calledWithExactly(null);
         });
         return it('should hide the modal', function () {
-          return expect(this.hidden).to.have.been.calledWithExactly('hide');
+          return expect(this.hidden).to.have.been.calledWithExactly();
         });
       });
     });
@@ -1313,12 +1314,12 @@ describe('bootbox.prompt', function () {
           title: 'What is your name?',
           callback: this.callback
         });
-        return this.hidden = sinon.spy(this.dialog, 'modal');
+        return this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
       });
       describe('when entering no value in the text input', function () {
         return describe('when dismissing the dialog by clicking OK', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-accept').trigger('click');
+            return this.dialog.querySelector('.bootbox-accept').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1336,11 +1337,11 @@ describe('bootbox.prompt', function () {
       });
       describe('when entering a value in the text input', function () {
         beforeEach(function () {
-          return this.dialog.find('.bootbox-input').val('Test input');
+          return this.dialog.querySelector('.bootbox-input').value = 'Test input';
         });
         return describe('when dismissing the dialog by clicking OK', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-accept').trigger('click');
+            return this.dialog.querySelector('.bootbox-accept').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1358,7 +1359,7 @@ describe('bootbox.prompt', function () {
       });
       describe('when dismissing the dialog by clicking Cancel', function () {
         beforeEach(function () {
-          return this.dialog.find('.bootbox-cancel').trigger('click');
+          return this.dialog.querySelector('.bootbox-cancel').click();
         });
         it('should invoke the callback', function () {
           return expect(this.callback).to.have.been.called;
@@ -1375,7 +1376,7 @@ describe('bootbox.prompt', function () {
       });
       describe('when triggering the escape event', function () {
         beforeEach(function () {
-          return this.dialog.trigger('escape.close.bb');
+          return this.dialog.dispatchEvent(new Event('escape.close.bb'));
         });
         it('should invoke the callback', function () {
           return expect(this.callback).to.have.been.called;
@@ -1392,7 +1393,7 @@ describe('bootbox.prompt', function () {
       });
       describe('when dismissing the dialog by clicking the close button', function () {
         beforeEach(function () {
-          return this.dialog.find('.close').trigger('click');
+          return this.dialog.querySelector('.close').click();
         });
         it('should invoke the callback', function () {
           return expect(this.callback).to.have.been.called;
@@ -1418,15 +1419,15 @@ describe('bootbox.prompt', function () {
           value: 'Bob',
           callback: this.callback
         });
-        return this.hidden = sinon.spy(this.dialog, 'modal');
+        return this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
       });
       it('populates the input with the default value', function () {
-        return expect(this.dialog.find('.bootbox-input').val()).to.equal('Bob');
+        return expect(this.dialog.querySelector('.bootbox-input').value).to.equal('Bob');
       });
       describe('when entering no value in the text input', function () {
         describe('when dismissing the dialog by clicking OK', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-accept').trigger('click');
+            return this.dialog.querySelector('.bootbox-accept').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1440,7 +1441,7 @@ describe('bootbox.prompt', function () {
         });
         describe('when dismissing the dialog by clicking Cancel', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-cancel').trigger('click');
+            return this.dialog.querySelector('.bootbox-cancel').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1455,11 +1456,11 @@ describe('bootbox.prompt', function () {
       });
       describe('when entering a value in the text input', function () {
         beforeEach(function () {
-          return this.dialog.find('.bootbox-input').val('Alice');
+          return this.dialog.querySelector('.bootbox-input').value = 'Alice';
         });
         describe('when dismissing the dialog by clicking OK', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-accept').trigger('click');
+            return this.dialog.querySelector('.bootbox-accept').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1473,7 +1474,7 @@ describe('bootbox.prompt', function () {
         });
         describe('when dismissing the dialog by clicking Cancel', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-cancel').trigger('click');
+            return this.dialog.querySelector('.bootbox-cancel').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1501,7 +1502,7 @@ describe('bootbox.prompt', function () {
         });
       });
       return it('populates the input with the placeholder attribute', function () {
-        return expect(this.dialog.find('.bootbox-input').attr('placeholder')).to.equal('e.g. Bob Smith');
+        return expect(this.dialog.querySelector('.bootbox-input').getAttribute('placeholder')).to.equal('e.g. Bob Smith');
       });
     });
 
@@ -1533,14 +1534,14 @@ describe('bootbox.prompt', function () {
               }
             ]
           });
-          return this.hidden = sinon.spy(this.dialog, 'modal');
+          return this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
         });
         it('has correct number values in list', function () {
-          return expect(this.find('.bootbox-input-select option').length).to.equal(5);
+          return expect(this.dialog.querySelectorAll('.bootbox-input-select option').length).to.equal(5);
         });
         describe('when dismissing the dialog by clicking OK', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-accept').trigger('click');
+            return this.dialog.querySelector('.bootbox-accept').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1554,7 +1555,7 @@ describe('bootbox.prompt', function () {
         });
         describe('when dismissing the dialog by clicking Cancel', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-cancel').trigger('click');
+            return this.dialog.querySelector('.bootbox-cancel').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1594,14 +1595,14 @@ describe('bootbox.prompt', function () {
               }
             ]
           });
-          return this.hidden = sinon.spy(this.dialog, 'modal');
+          return this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
         });
         it('specified option is selected', function () {
-          return expect(this.dialog.find('.bootbox-input-select').val()).to.equal('1');
+          return expect(this.dialog.querySelector('.bootbox-input-select').value).to.equal('1');
         });
         describe('when dismissing the dialog by clicking OK', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-accept').trigger('click');
+            return this.dialog.querySelector('.bootbox-accept').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1615,7 +1616,7 @@ describe('bootbox.prompt', function () {
         });
         describe('when dismissing the dialog by clicking Cancel', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-cancel').trigger('click');
+            return this.dialog.querySelector('.bootbox-cancel').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1629,8 +1630,8 @@ describe('bootbox.prompt', function () {
         });
         describe('when changing the selected option and dismissing the dialog by clicking OK', function () {
           beforeEach(function () {
-            this.dialog.find('.bootbox-input-select').val(3);
-            return this.dialog.find('.bootbox-accept').trigger('click');
+            this.dialog.querySelector('.bootbox-input-select').value = 3;
+            return this.dialog.querySelector('.bootbox-accept').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1652,11 +1653,11 @@ describe('bootbox.prompt', function () {
             inputType: 'email',
             callback: this.callback
           });
-          return this.hidden = sinon.spy(this.dialog, 'modal');
+          return this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
         });
         describe('when dismissing the dialog by clicking OK', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-accept').trigger('click');
+            return this.dialog.querySelector('.bootbox-accept').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1668,27 +1669,27 @@ describe('bootbox.prompt', function () {
             return expect(this.callback).to.have.been.calledWithExactly('');
           });
           return it('should hide the modal', function () {
-            return expect(this.hidden).to.have.been.calledWithExactly('hide');
+            return expect(this.hidden).to.have.been.calledWithExactly();
           });
         });
         describe('when submitting the form', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-form').trigger('submit');
+            return this.dialog.querySelector('.bootbox-form').dispatchEvent(new Event('submit'));
           });
           it('invokes the callback with the correct value', function () {
             return expect(this.callback).to.have.been.calledWithExactly('');
           });
           return it('should hide the modal', function () {
-            return expect(this.hidden).to.have.been.calledWithExactly('hide');
+            return expect(this.hidden).to.have.been.calledWithExactly();
           });
         });
         describe('when entering a value in the email input', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-input-email').val('john@smith.com');
+            return this.dialog.querySelector('.bootbox-input-email').value = 'john@smith.com';
           });
           describe('when dismissing the dialog by clicking OK', function () {
             beforeEach(function () {
-              return this.dialog.find('.bootbox-accept').trigger('click');
+              return this.dialog.querySelector('.bootbox-accept').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -1702,7 +1703,7 @@ describe('bootbox.prompt', function () {
           });
           describe('when dismissing the dialog by clicking Cancel', function () {
             beforeEach(function () {
-              return this.dialog.find('.bootbox-cancel').trigger('click');
+              return this.dialog.querySelector('.bootbox-cancel').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -1722,11 +1723,11 @@ describe('bootbox.prompt', function () {
             value: 'john@smith.com',
             callback: this.callback
           });
-          return this.hidden = sinon.spy(this.dialog, 'modal');
+          return this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
         });
         describe('when dismissing the dialog by clicking OK', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-accept').trigger('click');
+            return this.dialog.querySelector('.bootbox-accept').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1735,27 +1736,27 @@ describe('bootbox.prompt', function () {
             return expect(this.callback).to.have.been.calledWithExactly('john@smith.com');
           });
           return it('should hide the modal', function () {
-            return expect(this.hidden).to.have.been.calledWithExactly('hide');
+            return expect(this.hidden).to.have.been.calledWithExactly();
           });
         });
         describe('when submitting the form', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-form').trigger('submit');
+            return this.dialog.querySelector('.bootbox-form').dispatchEvent(new Event('submit'));
           });
           it('invokes the callback with the correct value', function () {
             return expect(this.callback).to.have.been.calledWithExactly('john@smith.com');
           });
           return it('should hide the modal', function () {
-            return expect(this.hidden).to.have.been.calledWithExactly('hide');
+            return expect(this.hidden).to.have.been.calledWithExactly();
           });
         });
         describe('when changing a value in the email input', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-input-email').val('smith@john.com');
+            return this.dialog.querySelector('.bootbox-input-email').value = 'smith@john.com';
           });
           describe('when dismissing the dialog by clicking OK', function () {
             beforeEach(function () {
-              return this.dialog.find('.bootbox-accept').trigger('click');
+              return this.dialog.querySelector('.bootbox-accept').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -1766,7 +1767,7 @@ describe('bootbox.prompt', function () {
           });
           describe('when dismissing the dialog by clicking Cancel', function () {
             beforeEach(function () {
-              return this.dialog.find('.bootbox-cancel').trigger('click');
+              return this.dialog.querySelector('.bootbox-cancel').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -1804,11 +1805,11 @@ describe('bootbox.prompt', function () {
             ],
             callback: this.callback
           });
-          return this.hidden = sinon.spy(this.dialog, 'modal');
+          return this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
         });
         describe('when dismissing the dialog by clicking OK', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-accept').trigger('click');
+            return this.dialog.querySelector('.bootbox-accept').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1817,12 +1818,12 @@ describe('bootbox.prompt', function () {
             return expect(this.callback).to.have.been.calledWithExactly([]);
           });
           return it('should hide the modal', function () {
-            return expect(this.hidden).to.have.been.calledWithExactly('hide');
+            return expect(this.hidden).to.have.been.calledWithExactly();
           });
         });
         describe('when dismissing the dialog by clicking Cancel', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-cancel').trigger('click');
+            return this.dialog.querySelector('.bootbox-cancel').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -1857,14 +1858,14 @@ describe('bootbox.prompt', function () {
                 }
               ]
             });
-            return this.hidden = sinon.spy(this.dialog, 'modal');
+            return this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
           });
           it('specified checkbox is checked', function () {
-            return expect(this.dialog.find('input:checkbox:checked').val()).to.equal('2');
+            return expect(this.dialog.querySelector('input[type="checkbox"]:checked').value).to.equal('2');
           });
           describe('when dismissing the dialog by clicking OK', function () {
             beforeEach(function () {
-              return this.dialog.find('.bootbox-accept').trigger('click');
+              return this.dialog.querySelector('.bootbox-accept').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -1875,7 +1876,7 @@ describe('bootbox.prompt', function () {
           });
           describe('when dismissing the dialog by clicking Cancel', function () {
             beforeEach(function () {
-              return this.dialog.find('.bootbox-cancel').trigger('click');
+              return this.dialog.querySelector('.bootbox-cancel').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -1886,9 +1887,9 @@ describe('bootbox.prompt', function () {
           });
           describe('when changing the checked option and dismissing the dialog by clicking Cancel', function () {
             beforeEach(function () {
-              this.dialog.find('input:checkbox:checked').prop('checked', false);
-              this.dialog.find('input:checkbox[value=3]').prop('checked', true);
-              return this.dialog.find('.bootbox-cancel').trigger('click');
+              this.dialog.querySelector('input[type="checkbox"]:checked').checked = false;
+              this.dialog.querySelector('input[type="checkbox"][value="3"]').checked = true;
+              return this.dialog.querySelector('.bootbox-cancel').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -1899,9 +1900,9 @@ describe('bootbox.prompt', function () {
           });
           describe('when changing the selected option and dismissing the dialog by clicking OK', function () {
             beforeEach(function () {
-              this.dialog.find('input:checkbox:checked').prop('checked', false);
-              this.dialog.find('input:checkbox[value=3]').prop('checked', true);
-              return this.dialog.find('.bootbox-accept').trigger('click');
+              this.dialog.querySelector('input[type="checkbox"]:checked').checked = false;
+              this.dialog.querySelector('input[type="checkbox"][value="3"]').checked = true;
+              return this.dialog.querySelector('.bootbox-accept').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -1935,21 +1936,20 @@ describe('bootbox.prompt', function () {
                 }
               ]
             });
-            return this.hidden = sinon.spy(this.dialog, 'modal');
+            return this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
           });
           it('specified checkboxes are checked', function () {
-            var checked;
-            checked = [];
-            this.dialog.find('input:checkbox:checked').each((function () {
-              return function (foo, bar) {
-                return checked.push($(bar).val());
-              };
-            })(this));
+            var checked = [];
+            this.dialog.querySelectorAll('input[type="checkbox"]:checked').forEach(box => { 
+			
+			   checked.push(box.value)
+	        });
+			
             return expect(checked).to.deep.equal(['2', '3']);
           });
           describe('when dismissing the dialog by clicking OK', function () {
             beforeEach(function () {
-              return this.dialog.find('.bootbox-accept').trigger('click');
+              return this.dialog.querySelector('.bootbox-accept').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -1960,7 +1960,7 @@ describe('bootbox.prompt', function () {
           });
           describe('when dismissing the dialog by clicking Cancel', function () {
             beforeEach(function () {
-              return this.dialog.find('.bootbox-cancel').trigger('click');
+              return this.dialog.querySelector('.bootbox-cancel').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -1971,10 +1971,10 @@ describe('bootbox.prompt', function () {
           });
           describe('when changing the checked options and dismissing the dialog by clicking Cancel', function () {
             beforeEach(function () {
-              this.dialog.find('input:checkbox:checked').prop('checked', false);
-              this.dialog.find('input:checkbox[value=1]').prop('checked', true);
-              this.dialog.find('input:checkbox[value=4]').prop('checked', true);
-              return this.dialog.find('.bootbox-cancel').trigger('click');
+              this.dialog.querySelectorAll('input[type="checkbox"]:checked').forEach(box => { box.checked = false; });
+              this.dialog.querySelector('input[type="checkbox"][value="1"').checked = true;
+              this.dialog.querySelector('input[type="checkbox"][value="4"]').checked = true;
+              return this.dialog.querySelector('.bootbox-cancel').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -1985,10 +1985,10 @@ describe('bootbox.prompt', function () {
           });
           describe('when changing the checked options and dismissing the dialog by clicking OK', function () {
             beforeEach(function () {
-              this.dialog.find('input:checkbox:checked').prop('checked', false);
-              this.dialog.find('input:checkbox[value=1]').prop('checked', true);
-              this.dialog.find('input:checkbox[value=4]').prop('checked', true);
-              return this.dialog.find('.bootbox-accept').trigger('click');
+              this.dialog.querySelectorAll('input[type="checkbox"]:checked').forEach(box => { box.checked = false; });
+              this.dialog.querySelector('input[type="checkbox"][value="1"]').checked = true;
+              this.dialog.querySelector('input[type="checkbox"][value="4"]').checked = true;
+              return this.dialog.querySelector('.bootbox-accept').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -2026,11 +2026,11 @@ describe('bootbox.prompt', function () {
             ],
             callback: this.callback
           });
-          return this.hidden = sinon.spy(this.dialog, 'modal');
+          return this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
         });
         describe('when dismissing the dialog by clicking OK', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-accept').trigger('click');
+            return this.dialog.querySelector('.bootbox-accept').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -2039,12 +2039,12 @@ describe('bootbox.prompt', function () {
             return expect(this.callback).to.have.been.calledWithExactly('1');
           });
           return it('should hide the modal', function () {
-            return expect(this.hidden).to.have.been.calledWithExactly('hide');
+            return expect(this.hidden).to.have.been.calledWithExactly();
           });
         });
         describe('when dismissing the dialog by clicking Cancel', function () {
           beforeEach(function () {
-            return this.dialog.find('.bootbox-cancel').trigger('click');
+            return this.dialog.querySelector('.bootbox-cancel').click();
           });
           it('should invoke the callback', function () {
             return expect(this.callback).to.have.been.called;
@@ -2079,14 +2079,14 @@ describe('bootbox.prompt', function () {
                 }
               ]
             });
-            return this.hidden = sinon.spy(this.dialog, 'modal');
+            return this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
           });
           it('specified radio is checked', function () {
-            return expect(this.dialog.find('input:checked').val()).to.equal('2');
+            return expect(this.dialog.querySelector('input:checked').value).to.equal('2');
           });
           describe('when dismissing the dialog by clicking OK', function () {
             beforeEach(function () {
-              return this.dialog.find('.bootbox-accept').trigger('click');
+              return this.dialog.querySelector('.bootbox-accept').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -2097,7 +2097,7 @@ describe('bootbox.prompt', function () {
           });
           describe('when dismissing the dialog by clicking Cancel', function () {
             beforeEach(function () {
-              return this.dialog.find('.bootbox-cancel').trigger('click');
+              return this.dialog.querySelector('.bootbox-cancel').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -2108,8 +2108,8 @@ describe('bootbox.prompt', function () {
           });
           describe('when changing the checked option and dismissing the dialog by clicking Cancel', function () {
             beforeEach(function () {
-              this.dialog.find('input:radio[value=3]').prop('checked', true);
-              return this.dialog.find('.bootbox-cancel').trigger('click');
+              this.dialog.querySelector('input[type="radio"][value="3"]').checked = true;
+              return this.dialog.querySelector('.bootbox-cancel').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;
@@ -2120,8 +2120,8 @@ describe('bootbox.prompt', function () {
           });
           describe('when changing the selected option and dismissing the dialog by clicking OK', function () {
             beforeEach(function () {
-              this.dialog.find('input:radio[value=3]').prop('checked', true);
-              return this.dialog.find('.bootbox-accept').trigger('click');
+              this.dialog.querySelector('input[type="radio"][value="3"]').checked = true;
+              return this.dialog.querySelector('.bootbox-accept').click();
             });
             it('should invoke the callback', function () {
               return expect(this.callback).to.have.been.called;

@@ -3,7 +3,7 @@ describe('bootbox.alert', function() {
   var self;
   var _this = this;
   _this.bootstrapVersion = function() {
-    let fullVersion = $.fn.modal.Constructor.VERSION;
+    let fullVersion = bootstrap.Modal.VERSION;
     let i = fullVersion.indexOf('.');
     return fullVersion.substring(0, i);
   };
@@ -12,11 +12,12 @@ describe('bootbox.alert', function() {
     self = this;
 
     this.text = function(selector) {
-      return this.find(selector).text();
+		
+      return this.find(selector).textContent;
     };
 
     this.find = function(selector) {
-      return this.dialog.find(selector);
+		return this.dialog.querySelector(selector);
     };
   });
 
@@ -40,7 +41,7 @@ describe('bootbox.alert', function() {
         });
 
         it('applies the bootbox-alert class to the dialog', function() {
-          expect(this.dialog.hasClass('bootbox-alert')).to.be.true;
+          expect(this.dialog.classList.contains('bootbox-alert')).to.be.true;
         });
 
         it('shows the expected body copy', function() {
@@ -48,15 +49,15 @@ describe('bootbox.alert', function() {
         });
 
         it('shows an OK button', function() {
-          expect(this.text('.modal-footer button:first')).to.equal('OK');
+          expect(this.text('.modal-footer button:first-child')).to.equal('OK');
         });
 
         it('applies the primary class to the button', function() {
-          expect(this.find('.modal-footer button:first').hasClass('btn-primary')).to.be.true;
+          expect(this.find('.modal-footer button:first-child').classList.contains('btn-primary')).to.be.true;
         });
         
         it('applies the bootbox-accept class to the button', function() {
-          expect(this.find('.modal-footer button:first').hasClass('bootbox-accept')).to.be.true;
+          expect(this.find('.modal-footer button:first-child').classList.contains('bootbox-accept')).to.be.true;
         });
 
         it('shows a close button inside the header', function() {
@@ -70,17 +71,17 @@ describe('bootbox.alert', function() {
 
         it('applies the close class to the close button', function() {
           if(_this.bootstrapVersion() >= 5) {
-            expect(this.find('.modal-header button').hasClass('btn-close')).to.be.true;
+            expect(this.find('.modal-header button').classList.contains('btn-close')).to.be.true;
           }
-          expect(this.find('.modal-header button').hasClass('close')).to.be.true;
+          expect(this.find('.modal-header button').classList.contains('close')).to.be.true;
         });
 
         it('applies the correct aria-hidden attribute to the close button', function() {
-          expect(this.find('button.close').attr('aria-hidden')).to.equal('true');
+          expect(this.find('button.close').getAttribute('aria-hidden')).to.equal('true');
         });
 
         it('applies the correct class to the body', function() {
-          expect($('body').hasClass('modal-open')).to.be.true;
+          expect(document.querySelector('body').classList.contains('modal-open')).to.be.true;
         });
       });
     });
@@ -147,13 +148,13 @@ describe('bootbox.alert', function() {
 
           this.create();
 
-          this.button = this.dialog.find('.btn:first');
+          this.button = this.dialog.querySelector('.btn:first-child');
         });
 
         it('adds the correct ok button', function() {
-          expect(this.button.text()).to.equal('Custom OK');
-          expect(this.button.hasClass('btn-danger')).to.be.true;
-          expect(this.button.hasClass('bootbox-accept')).to.be.true;
+          expect(this.button.textContent).to.equal('Custom OK');
+          expect(this.button.classList.contains('btn-danger')).to.be.true;
+          expect(this.button.classList.contains('bootbox-accept')).to.be.true;
         });
       });
 
@@ -193,36 +194,36 @@ describe('bootbox.alert', function() {
           message:'Hello!'
         });
 
-        this.hidden = sinon.spy(this.dialog, 'modal');
+        this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
       });
 
       describe('when dismissing the dialog by clicking OK', function() {
         beforeEach(function() {
-          this.dialog.find('.bootbox-accept').trigger('click');
+          this.dialog.querySelector('.bootbox-accept').click();
         });
 
         it('should hide the modal', function() {
-          expect(this.hidden).to.have.been.calledWithExactly('hide');
+          expect(this.hidden).to.have.been.calledWithExactly();
         });
       });
 
       describe('when clicking the close button', function() {
         beforeEach(function() {
-          this.dialog.find('.close').trigger('click');
+          this.dialog.querySelector('.close').click();
         });
 
         it('should hide the modal', function() {
-          expect(this.hidden).to.have.been.calledWithExactly('hide');
+          expect(this.hidden).to.have.been.calledWithExactly();
         });
       });
 
       describe('when triggering the escape event', function() {
         beforeEach(function() {
-          this.dialog.trigger('escape.close.bb');
+          this.dialog.dispatchEvent(new Event('escape.close.bb'));
         });
 
         it('should hide the modal', function() {
-          expect(this.hidden).to.have.been.calledWithExactly('hide');
+          expect(this.hidden).to.have.been.calledWithExactly();
         });
       });
     });
@@ -236,12 +237,12 @@ describe('bootbox.alert', function() {
           callback: this.callback
         });
 
-        this.hidden = sinon.spy(this.dialog, 'modal');
+        this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
       });
 
       describe('when dismissing the dialog by clicking OK', function() {
         beforeEach(function() {
-          this.dialog.find('.bootbox-accept').trigger('click');
+          this.dialog.querySelector('.bootbox-accept').click();
         });
 
         it('should invoke the callback', function() {
@@ -253,13 +254,13 @@ describe('bootbox.alert', function() {
         });
 
         it('should hide the modal', function() {
-          expect(this.hidden).to.have.been.calledWithExactly('hide');
+          expect(this.hidden).to.have.been.calledWithExactly();
         });
       });
 
       describe('when clicking the close button', function() {
         beforeEach(function() {
-          this.dialog.find('.close').trigger('click');
+          this.dialog.querySelector('.close').click();
         });
 
         it('should invoke the callback', function() {
@@ -271,13 +272,13 @@ describe('bootbox.alert', function() {
         });
 
         it('should hide the modal', function() {
-          expect(this.hidden).to.have.been.calledWithExactly('hide');
+          expect(this.hidden).to.have.been.calledWithExactly();
         });
       });
 
       describe('when triggering the escape event', function() {
         beforeEach(function() {
-          this.dialog.trigger('escape.close.bb');
+          this.dialog.dispatchEvent(new Event('escape.close.bb'));
         });
 
         it('should invoke the callback', function() {
@@ -289,7 +290,7 @@ describe('bootbox.alert', function() {
         });
 
         it('should hide the modal', function() {
-          expect(this.hidden).to.have.been.calledWithExactly('hide');
+          expect(this.hidden).to.have.been.calledWithExactly();
         });
       });
     });
@@ -304,12 +305,12 @@ describe('bootbox.alert', function() {
           callback: this.callback
         });
 
-        this.hidden = sinon.spy(this.dialog, 'modal');
+        this.hidden = sinon.spy(bootstrap.Modal.getInstance(this.dialog), "hide");
       });
 
       describe('when dismissing the dialog by clicking OK', function() {
         beforeEach(function() {
-          this.dialog.find('.bootbox-accept').trigger('click');
+          this.dialog.querySelector('.bootbox-accept').click();
         });
 
         it('should invoke the callback', function() {
@@ -327,7 +328,7 @@ describe('bootbox.alert', function() {
 
       describe('when clicking the close button', function() {
         beforeEach(function() {
-          this.dialog.find('.close').trigger('click');
+          this.dialog.querySelector('.close').click();
         });
 
         it('should invoke the callback', function() {
@@ -345,7 +346,7 @@ describe('bootbox.alert', function() {
 
       describe('when triggering the escape event', function() {
         beforeEach(function() {
-          this.dialog.trigger('escape.close.bb');
+          this.dialog.dispatchEvent(new Event('escape.close.bb'));
         });
 
         it('should invoke the callback', function() {

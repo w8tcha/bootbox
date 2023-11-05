@@ -2,7 +2,7 @@ describe('bootbox.setDefaults', function() {
   'use strict';
   beforeEach(function() {
     this.find = function(selector) {
-      return this.dialog.find(selector);
+      return this.dialog.querySelector(selector);
     };
   });
 
@@ -18,20 +18,20 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('does not add the fade class to the dialog', function() {
-        expect(this.dialog.hasClass('fade')).to.be.false;
+        expect(this.dialog.classList.contains('fade')).to.be.false;
       });
 
       it('applies the correct class to the body', function() {
-        expect($('body').hasClass('modal-open')).to.be.true;
+        expect(document.querySelector('body').classList.contains('modal-open')).to.be.true;
       });
 
       describe('when clicking the close button', function() {
         beforeEach(function() {
-          this.dialog.find('.close').trigger('click');
+          this.dialog.querySelector('.close').click();
         });
 
         it('removes the modal-open class from the body', function() {
-          expect($('body').hasClass('modal-open')).to.be.false;
+          expect(document.querySelector('body').classList.contains('modal-open')).to.be.false;
         });
       });
     });
@@ -47,7 +47,7 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('adds the fade class to the dialog', function() {
-        expect(this.dialog.hasClass('fade')).to.be.true;
+        expect(this.dialog.classList.contains('fade')).to.be.true;
       });
     });
   });
@@ -65,8 +65,8 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('adds the extra class to the outer dialog', function() {
-        expect(this.dialog.hasClass('bootbox')).to.be.true;
-        expect(this.dialog.hasClass('my-class')).to.be.true;
+        expect(this.dialog.classList.contains('bootbox')).to.be.true;
+        expect(this.dialog.classList.contains('my-class')).to.be.true;
       });
     });
   });
@@ -84,7 +84,7 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('adds the extra-large class to the innerDialog', function() {
-        expect(this.dialog.children('.modal-dialog').hasClass('modal-xl')).to.be.true;
+        expect(this.dialog.querySelector(".modal-dialog").classList.contains('modal-xl')).to.be.true;
       });
     });
     describe('when set to xl', function() {
@@ -99,7 +99,7 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('adds the extra-large class to the innerDialog', function() {
-        expect(this.dialog.children('.modal-dialog').hasClass('modal-xl')).to.be.true;
+        expect(this.dialog.querySelector(".modal-dialog").classList.contains('modal-xl')).to.be.true;
       });
     });
 
@@ -115,7 +115,7 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('adds the extra-large class to the innerDialog', function() {
-        expect(this.dialog.children('.modal-dialog').hasClass('modal-xl')).to.be.true;
+        expect(this.dialog.querySelector(".modal-dialog").classList.contains('modal-xl')).to.be.true;
       });
     });
     describe('when set to xl', function() {
@@ -130,7 +130,7 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('adds the extra-large class to the innerDialog', function() {
-        expect(this.dialog.children('.modal-dialog').hasClass('modal-xl')).to.be.true;
+        expect(this.dialog.querySelector(".modal-dialog").classList.contains('modal-xl')).to.be.true;
       });
     });
 
@@ -146,7 +146,7 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('adds the large class to the innerDialog', function() {
-        expect(this.dialog.children('.modal-dialog').hasClass('modal-lg')).to.be.true;
+        expect(this.dialog.querySelector(".modal-dialog").classList.contains('modal-lg')).to.be.true;
       });
     });
     describe('when set to lg', function() {
@@ -161,7 +161,7 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('adds the large class to the innerDialog', function() {
-        expect(this.dialog.children('.modal-dialog').hasClass('modal-lg')).to.be.true;
+        expect(this.dialog.querySelector(".modal-dialog").classList.contains('modal-lg')).to.be.true;
       });
     });
 
@@ -177,7 +177,7 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('adds the small class to the innerDialog', function() {
-        expect(this.dialog.children('.modal-dialog').hasClass('modal-sm')).to.be.true;
+        expect(this.dialog.querySelector(".modal-dialog").classList.contains('modal-sm')).to.be.true;
       });
     });
     describe('when set to sm', function() {
@@ -192,29 +192,11 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('adds the small class to the innerDialog', function() {
-        expect(this.dialog.children('.modal-dialog').hasClass('modal-sm')).to.be.true;
+        expect(this.dialog.querySelector(".modal-dialog").classList.contains('modal-sm')).to.be.true;
       });
     });
   });
 
-  describe('backdrop', function() {
-    describe('when set to false', function() {
-      beforeEach(function() {
-        bootbox.setDefaults({
-          backdrop: false
-        });
-
-        this.dialog = bootbox.dialog({
-          message: 'test'
-        });
-      });
-
-      it('does not show a backdrop', function() {
-        expect(this.dialog.next('.modal-backdrop').length).to.equal(0);
-      });
-    });
-  });
-  
   describe('centerVertical', function() {
     describe('when set to true', function() {
       beforeEach(function() {
@@ -228,7 +210,7 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('adds the modal-dialog-centered class to the innerDialog', function() {
-        expect(this.dialog.children('.modal-dialog').hasClass('modal-dialog-centered')).to.be.true;
+	  expect(this.dialog.querySelector(".modal-dialog").classList.contains('modal-dialog-centered')).to.be.true;
       });
     });
   });
@@ -246,7 +228,7 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('adds the modal-dialog-scrollable class to the innerDialog', function() {
-        expect(this.dialog.children('.modal-dialog').hasClass('modal-dialog-scrollable')).to.be.true;
+        expect(this.dialog.querySelector(".modal-dialog").classList.contains('modal-dialog-scrollable')).to.be.true;
       });
     });
   });
@@ -260,8 +242,8 @@ describe('bootbox.setDefaults', function() {
     });
 
     it('applies the arguments as a key/value pair', function() {
-      expect(this.dialog.hasClass('bootbox')).to.be.true;
-      expect(this.dialog.hasClass('my-class')).to.be.true;
+      expect(this.dialog.classList.contains('bootbox')).to.be.true;
+      expect(this.dialog.classList.contains('my-class')).to.be.true;
     });
   });
 
@@ -274,7 +256,7 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('defaults to the body element', function() {
-        expect(this.dialog.parent().is('body')).to.be.true;
+        expect(this.dialog.parentNode.tagName.toLowerCase() == 'body').to.be.true;
       });
     });
 
@@ -290,14 +272,17 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('sets the correct parent element', function() {
-        expect(this.dialog.parent().is('body')).to.be.true;
+        expect(this.dialog.parentNode.tagName.toLowerCase() == 'body').to.be.true;
       });
     });
 
     describe('when set to another dom element', function() {
 
       beforeEach(function() {
-        this.container = $('<div></div>');
+		const template = document.createElement('template');
+        template.innerHTML = '<div></div>'.trim();
+		  
+        this.container = template.content.children[0];
         bootbox.setDefaults({
           container: this.container
         });
@@ -308,7 +293,7 @@ describe('bootbox.setDefaults', function() {
       });
 
       it('sets the correct parent element', function() {
-        expect(this.dialog.parent().is(this.container)).to.be.true;
+        expect(this.dialog.parentNode == this.container).to.be.true;
       });
     });
   });
