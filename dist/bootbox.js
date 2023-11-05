@@ -1,4 +1,4 @@
-﻿/*! @preserve
+/*! @preserve
  * bootbox.js
  * version: 6.0.0
  * author: Nick Payne <nick@kurai.co.uk>

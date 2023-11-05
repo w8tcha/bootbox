@@ -283,7 +283,7 @@
           }
 
           if (b.disabled === true) {
-            button.disabled = true
+            button.disabled = true;
           }
 
           footer.append(button);
@@ -437,7 +437,7 @@
 
       if (options.onShow) {
         if (typeof options.onShow === 'function') {
-          dialog.on('show.bs.modal', options.onShow);
+          addEventListener(dialog, 'show.bs.modal', options.onShow);
         } else {
           throw new Error('Argument supplied to "onShow" must be a function');
         }
@@ -449,7 +449,7 @@
 
       if (options.onShown) {
         if (typeof options.onShown === 'function') {
-          dialog.on('shown.bs.modal', options.onShown);
+          addEventListener(dialog, 'shown.bs.modal', options.onShown);
         } else {
           throw new Error('Argument supplied to "onShown" must be a function');
         }
@@ -461,8 +461,8 @@
         let startedOnBody = false;
 
         // Prevents the event from propagating to the backdrop, when something inside the dialog is clicked
-        dialog.on('mousedown',
-          '.modal-content',
+        addEventListener(dialog,
+          'mousedown',
           function(e) {
             e.stopPropagation();
 
@@ -472,13 +472,12 @@
         // A boolean true/false according to the Bootstrap docs should show a dialog the user can dismiss by clicking on the background.
         // We always only ever pass static/false to the actual $.modal function because with "true" we can't trap this event (the .modal-backdrop swallows it).
         // However, we still want to sort-of respect true and invoke the escape mechanism instead
-        dialog.on('click.dismiss.bs.modal',
-          function(e) {
-            if (startedOnBody || e.target !== e.currentTarget) {
-              return;
-            }
-            trigger(dialog, 'escape.close.bb');
-          });
+        addEventListener(dialog, 'click.dismiss.bs.modal', function(e) {
+          if (startedOnBody || e.target !== e.currentTarget) {
+            return;
+          }
+          trigger(dialog, 'escape.close.bb');
+        });
       }
 
       dialog.addEventListener('escape.close.bb',
@@ -522,7 +521,12 @@
       Bootstrap's modal functionality and then giving the resulting object back to our caller
       */
 
-      document.querySelector(options.container).append(dialog);
+      if (typeof options.container === 'object') {
+        options.container.append(dialog);
+      } else {
+        document.querySelector(options.container).append(dialog);
+      }
+
 
       const modal = new bootstrap.Modal(dialog, {
         backdrop: options.backdrop,
@@ -534,7 +538,7 @@
         modal.show(options.relatedTarget);
       }
 
-      return modal;
+      return dialog;
     };
 
 
@@ -635,9 +639,9 @@
         let value;
 
         if (options.inputType === 'checkbox') {
-          value = input.querySelector('input[type="checkbox"]:checked').map(function(e) {
+          value = Array.from(input.querySelectorAll('input[type="checkbox"]:checked')).map(function(e) {
             return e.value;
-          }).get();
+          });
         } else if (options.inputType === 'radio') {
           value = input.querySelector('input[type="radio"]:checked').value;
         } else {
@@ -688,9 +692,7 @@
 
           if (options.rows && !isNaN(parseInt(options.rows))) {
             if (options.inputType === 'textarea') {
-              input.setAttribute({
-                'rows': options.rows
-              });
+              input.setAttribute('rows', options.rows);
             }
           }
           break;
@@ -765,7 +767,7 @@
             input.multiple = true;
           }
 
-          for (const [key, value] of Object.entries(inputOptions)) {
+          for (const [, option] of Object.entries(inputOptions)) {
             // Assume the element to attach to is the input...
             let elem = input;
 
@@ -776,16 +778,25 @@
             // ... but override that element if this option sits in a group
 
             if (option.group) {
+
               // Initialise group if necessary
               if (!groups[option.group]) {
-                groups[option.group] = generateElement('<optgroup />').setAttribute('label', option.group);
+                var groupElement = generateElement('<optgroup />');
+                groupElement.setAttribute('label', option.group);
+
+                groups[option.group] = groupElement;
               }
 
               elem = groups[option.group];
             }
 
             let o = generateElement(templates.option);
-            o.setAttribute('value', option.value).text(option.text);
+
+            o.setAttribute('value', option.value);
+            o.textContent = option.text;
+
+
+
             elem.append(o);
           }
 
@@ -1256,6 +1267,26 @@
       const template = document.createElement('template');
       template.innerHTML = html.trim();
       return template.content.children[0];
+    }
+
+    function addEventListener(el, eventName, eventHandler, selector) {
+      if (selector) {
+        const wrappedHandler = (e) => {
+          if (!e.target) return;
+          const el = e.target.closest(selector);
+          if (el) {
+            eventHandler.call(el, e);
+          }
+        };
+        el.addEventListener(eventName, wrappedHandler);
+        return wrappedHandler;
+      } else {
+        const wrappedHandler = (e) => {
+          eventHandler.call(el, e);
+        };
+        el.addEventListener(eventName, wrappedHandler);
+        return wrappedHandler;
+      }
     }
 
     //  The Bootbox object
