@@ -11,3 +11,5 @@ composer.lock
 .vscode
 dist/bootbox.zip
 *.tgz
+package-lock.json
+package-lock.json
