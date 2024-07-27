@@ -58,8 +58,23 @@ module.exports = function (grunt) {
                 configFile: 'karma.conf.js'
             }
         },
+		
+		devUpdate: {
+            main: {
+                options: {
+                    updateType: 'force',
+					semver: false,
+                    reportUpdated: true,
+                    packages: {
+                        devDependencies: true,
+                        dependencies: true
+                    },
+                }
+            }
+        }
     });
 
+	grunt.loadNpmTasks('@w8tcha/grunt-dev-update');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks("grunt-jsbeautifier");
     grunt.loadNpmTasks('grunt-contrib-uglify');
