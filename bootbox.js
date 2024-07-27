@@ -1171,8 +1171,8 @@
             return Object.keys(obj).length;
         }
 
-        function focusPrimaryButton() {
-            trigger(de.data.dialog.querySelector('.bootbox-accept').first(), 'focus');
+        function focusPrimaryButton(e) {
+            trigger(e.data.dialog.querySelector('.bootbox-accept').first(), 'focus');
         }
 
 
