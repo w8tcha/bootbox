@@ -12,3 +12,4 @@ composer.lock
 dist/bootbox.zip
 *.tgz
 package-lock.json
+/karma_html

@@ -1,6 +1,6 @@
 /*! @preserve
  * bootbox.js
- * version: 6.0.0
+ * version: 6.0.2
  * author: Nick Payne <nick@kurai.co.uk>
  * license: MIT
  * http://bootboxjs.com/
@@ -23,7 +23,7 @@
 
     const exports = {};
 
-    const VERSION = '6.0.0';
+    const VERSION = '6.0.2';
     exports.VERSION = VERSION;
 
     const locales = {
@@ -639,9 +639,16 @@
         let value;
 
         if (options.inputType === 'checkbox') {
-          value = Array.from(input.querySelectorAll('input[type="checkbox"]:checked')).map(function(e) {
+          const checkedInputs = Array.from(input.querySelectorAll('input[type="checkbox"]:checked'));
+
+          value = Array.from(checkedInputs).map(function(e) {
             return e.value;
           });
+
+          if (options.required === true && checkedInputs.length === 0) {
+            // prevents button callback from being called if no checkboxes have been checked
+            return false;
+          }
         } else if (options.inputType === 'radio') {
           value = input.querySelector('input[type="radio"]:checked').value;
         } else {
@@ -1449,7 +1456,7 @@
   bootbox.addLocale('ja', {
     OK: 'OK',
     CANCEL: 'キャンセル',
-    CONFIRM: '確認'
+    CONFIRM: 'OK'
   });
   // locale : Georgian
   // author : Avtandil Kikabidze aka LONGMAN (@akalongman)

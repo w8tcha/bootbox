@@ -368,20 +368,24 @@ describe('bootbox locales', function() {
       return expect(this.labels.confirm).to.equal('Επιβεβαίωση');
     });
   });
-  describe('Japanese', function() {
-    beforeEach(function() {
-      return this.setLocale('ja');
-    });
-    it('shows the correct OK translation', function() {
-      return expect(this.labels.ok).to.equal('OK');
-    });
-    it('shows the correct CANCEL translation', function() {
-      return expect(this.labels.cancel).to.equal('キャンセル');
-    });
-    return it('shows the correct CONFIRM translation', function() {
-      return expect(this.labels.confirm).to.equal('確認');
-    });
-  });
+  describe('Japanese',
+	  function() {
+		  beforeEach(function() {
+			  return this.setLocale('ja');
+		  });
+		  it('shows the correct OK translation',
+			  function() {
+				  return expect(this.labels.ok).to.equal('OK');
+			  });
+		  it('shows the correct CANCEL translation',
+			  function() {
+				  return expect(this.labels.cancel).to.equal('キャンセル');
+			  });
+		  return it('shows the correct CONFIRM translation',
+			  function() {
+				  return expect(this.labels.confirm).to.equal('OK');
+			  });
+	  });
   describe('Hungarian', function() {
     beforeEach(function() {
       return this.setLocale('hu');

@@ -18,6 +18,11 @@ module.exports = function (grunt) {
             }
         },
 
+        license: {
+	        src: ['LICENSE.md'],
+	        dest: 'dist/LICENSE.md'
+        },
+
         jsbeautifier : {
             src : ['dist/bootbox.locales.js','dist/bootbox.all.js'],
             options:{
@@ -76,7 +81,7 @@ module.exports = function (grunt) {
 
 	grunt.loadNpmTasks('@w8tcha/grunt-dev-update');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks("grunt-jsbeautifier");
+    grunt.loadNpmTasks('grunt-jsbeautifier');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-karma');

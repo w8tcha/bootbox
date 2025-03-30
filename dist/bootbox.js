@@ -1,6 +1,6 @@
 /*! @preserve
  * bootbox.js
- * version: 6.0.0
+ * version: 6.0.2
  * author: Nick Payne <nick@kurai.co.uk>
  * license: MIT
  * http://bootboxjs.com/
@@ -23,7 +23,7 @@
 
         const exports = {};
 
-        const VERSION = '6.0.0';
+        const VERSION = '6.0.2';
         exports.VERSION = VERSION;
 
         const locales = {
@@ -633,19 +633,26 @@
 
             // Prompt submitted - extract the prompt value. This requires a bit of work, given the different input types available.
             options.buttons.confirm.callback = function() {
-                let value;
+	            let value;
 
-                if (options.inputType === 'checkbox') {
-                    value = Array.from(input.querySelectorAll('input[type="checkbox"]:checked')).map(function(e) {
-                        return e.value;
-                    });
-                } else if (options.inputType === 'radio') {
-                    value = input.querySelector('input[type="radio"]:checked').value;
-                } else {
-                    value = input.value;
-                }
+	            if (options.inputType === 'checkbox') {
+		            const checkedInputs = Array.from(input.querySelectorAll('input[type="checkbox"]:checked'));
 
-                return options.callback.call(this, value);
+		            value = Array.from(checkedInputs).map(function(e) {
+			            return e.value;
+		            });
+
+		            if (options.required === true && checkedInputs.length === 0) {
+			            // prevents button callback from being called if no checkboxes have been checked
+			            return false;
+		            }
+	            } else if (options.inputType === 'radio') {
+		            value = input.querySelector('input[type="radio"]:checked').value;
+	            } else {
+		            value = input.value;
+	            }
+
+	            return options.callback.call(this, value);
             };
 
             // prompt-specific validation
