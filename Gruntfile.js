@@ -1,4 +1,5 @@
-module.exports = function (grunt) {
+module.exports = (grunt) => {
+	require('@lodder/time-grunt')(grunt);
     'use strict';
     grunt.initConfig({
         concat: {
