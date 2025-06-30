@@ -1335,7 +1335,7 @@ describe('bootbox.prompt', () => {
                     callback: callback
                 });
                 const modalInstance = bootstrap.Modal.getInstance(dialog);
-                
+
                 hidden = vi.spyOn(modalInstance, 'hide');
             });
             describe('when entering no value in the text input', () => {
@@ -1557,9 +1557,9 @@ describe('bootbox.prompt', () => {
                             }
                         ]
                     });
-                   const modalInstance = bootstrap.Modal.getInstance(dialog);
-                
-        hidden = vi.spyOn(modalInstance, 'hide');
+                    const modalInstance = bootstrap.Modal.getInstance(dialog);
+
+                    hidden = vi.spyOn(modalInstance, 'hide');
                 });
                 it('has correct number values in list', () => {
                     expect(dialog.querySelectorAll('.bootbox-input-select option').length).to.equal(5);
@@ -1621,8 +1621,8 @@ describe('bootbox.prompt', () => {
                         ]
                     });
                     const modalInstance = bootstrap.Modal.getInstance(dialog);
-                
-        hidden = vi.spyOn(modalInstance, 'hide');
+
+                    hidden = vi.spyOn(modalInstance, 'hide');
                 });
                 it('specified option is selected', () => {
                     expect(dialog.querySelector('.bootbox-input-select').value).to.equal('1');
@@ -1681,8 +1681,8 @@ describe('bootbox.prompt', () => {
                         callback: callback
                     });
                     const modalInstance = bootstrap.Modal.getInstance(dialog);
-                
-        hidden = vi.spyOn(modalInstance, 'hide');
+
+                    hidden = vi.spyOn(modalInstance, 'hide');
                 });
                 describe('when dismissing the dialog by clicking OK', () => {
                     beforeEach(function () {
@@ -1752,9 +1752,9 @@ describe('bootbox.prompt', () => {
                         value: 'john@smith.com',
                         callback: callback
                     });
-                   const modalInstance = bootstrap.Modal.getInstance(dialog);
-                
-        hidden = vi.spyOn(modalInstance, 'hide');
+                    const modalInstance = bootstrap.Modal.getInstance(dialog);
+
+                    hidden = vi.spyOn(modalInstance, 'hide');
                 });
                 describe('when dismissing the dialog by clicking OK', () => {
                     beforeEach(function () {
@@ -1837,8 +1837,8 @@ describe('bootbox.prompt', () => {
                         callback: callback
                     });
                     const modalInstance = bootstrap.Modal.getInstance(dialog);
-                
-        hidden = vi.spyOn(modalInstance, 'hide');
+
+                    hidden = vi.spyOn(modalInstance, 'hide');
                 });
                 describe('when dismissing the dialog by clicking OK', () => {
                     beforeEach(function () {
@@ -1892,8 +1892,8 @@ describe('bootbox.prompt', () => {
                             ]
                         });
                         const modalInstance = bootstrap.Modal.getInstance(dialog);
-                
-        hidden = vi.spyOn(modalInstance, 'hide');
+
+                        hidden = vi.spyOn(modalInstance, 'hide');
                     });
                     it('specified checkbox is checked', () => {
                         expect(dialog.querySelector('input[type="checkbox"]:checked').value).to.equal('2');
@@ -1972,8 +1972,8 @@ describe('bootbox.prompt', () => {
                             ]
                         });
                         const modalInstance = bootstrap.Modal.getInstance(dialog);
-                
-        hidden = vi.spyOn(modalInstance, 'hide');
+
+                        hidden = vi.spyOn(modalInstance, 'hide');
                     });
                     it('specified checkboxes are checked', () => {
                         var checked = [];
@@ -2064,8 +2064,8 @@ describe('bootbox.prompt', () => {
                         callback: callback
                     });
                     const modalInstance = bootstrap.Modal.getInstance(dialog);
-                
-        hidden = vi.spyOn(modalInstance, 'hide');
+
+                    hidden = vi.spyOn(modalInstance, 'hide');
                 });
                 describe('when dismissing the dialog by clicking OK', () => {
                     beforeEach(function () {
@@ -2119,8 +2119,8 @@ describe('bootbox.prompt', () => {
                             ]
                         });
                         const modalInstance = bootstrap.Modal.getInstance(dialog);
-                
-        hidden = vi.spyOn(modalInstance, 'hide');
+
+                        hidden = vi.spyOn(modalInstance, 'hide');
                     });
                     it('specified radio is checked', () => {
                         expect(dialog.querySelector('input:checked').value).to.equal('2');

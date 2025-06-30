@@ -17,6 +17,13 @@ const find = (selector: string): HTMLElement | null => dialog!.querySelector<HTM
 const text = (selector: string) : string | null | undefined => find(selector)?.textContent;
 
 describe('bootbox.alert', () => {
+	afterEach(() => {
+	   dialog = null;
+	   button= null;
+	   create= null;
+	   callback= null;
+	   hidden= null;
+	  });
 	describe('basic usage tests', () => {
 		describe('with no arguments', () => {
 			let create;
@@ -189,182 +196,216 @@ describe('bootbox.alert', () => {
 		});
 	});
 
-	describe('callback tests', () => {
+	describe('callback tests',
+		() => {
 
-		describe('with no callback', () => {
-			beforeEach(() => {
-				dialog = bootbox.alert({
-					message:'Hello!'
+			describe('with no callback',
+				() => {
+					beforeEach(() => {
+						dialog = bootbox.alert({
+							message: 'Hello!'
+						});
+
+						const modalInstance = bootstrap.Modal.getInstance(dialog);
+						hidden = vi.spyOn(modalInstance, 'hide');
+					});
+
+					describe('when dismissing the dialog by clicking OK',
+						() => {
+							beforeEach(() => {
+								dialog?.querySelector<HTMLElement>('.bootbox-accept')?.click();
+							});
+
+							it('should hide the modal',
+								() => {
+									expect(hidden).toHaveBeenCalledWith();
+								});
+						});
+
+					describe('when clicking the close button',
+						() => {
+							beforeEach(() => {
+								dialog?.querySelector<HTMLElement>('.close')?.click();
+							});
+
+							it('should hide the modal',
+								() => {
+									expect(hidden).toHaveBeenCalledWith();
+								});
+						});
+
+					describe('when triggering the escape event',
+						() => {
+							beforeEach(() => {
+								dialog?.dispatchEvent(new Event('escape.close.bb'));
+							});
+
+							it('should hide the modal',
+								() => {
+									expect(hidden).toHaveBeenCalledWith();
+								});
+						});
 				});
 
-				const modalInstance = bootstrap.Modal.getInstance(dialog);
-				hidden = vi.spyOn(modalInstance, 'hide');
-			});
+			describe('with a simple callback',
+				() => {
+					beforeEach(() => {
+						callback = vi.fn();
 
-			describe('when dismissing the dialog by clicking OK', () => {
-				beforeEach(() => {
-					dialog?.querySelector<HTMLElement>('.bootbox-accept')?.click();
+						dialog = bootbox.alert({
+							message: 'Hello!',
+							callback: callback
+						});
+
+						const modalInstance = bootstrap.Modal.getInstance(dialog);
+						hidden = vi.spyOn(modalInstance, 'hide');
+					});
+
+					describe('when dismissing the dialog by clicking OK',
+						() => {
+							beforeEach(() => {
+								dialog?.querySelector<HTMLElement>('.bootbox-accept')?.click();
+							});
+
+							it('should invoke the callback',
+								() => {
+									expect(callback).toHaveBeenCalled();
+								});
+
+							it('should pass the dialog as "this"',
+								() => {
+									expect(callback.mock.instances[0]).to.equal(dialog);
+								});
+
+							it('should hide the modal',
+								() => {
+									expect(hidden).toHaveBeenCalledWith();
+								});
+						});
+
+					describe('when clicking the close button',
+						() => {
+							beforeEach(() => {
+								dialog?.querySelector<HTMLElement>('.close')?.click();
+							});
+
+							it('should invoke the callback',
+								() => {
+									expect(callback).toHaveBeenCalled();
+								});
+
+							it('should pass the dialog as "this"',
+								() => {
+									expect(callback.mock.instances[0]).to.equal(dialog);
+								});
+
+							it('should hide the modal',
+								() => {
+									expect(hidden).toHaveBeenCalledWith();
+								});
+						});
+
+					describe('when triggering the escape event',
+						() => {
+							beforeEach(() => {
+								dialog?.dispatchEvent(new Event('escape.close.bb'));
+							});
+
+							it('should invoke the callback',
+								() => {
+									expect(callback).toHaveBeenCalled();
+								});
+
+							it('should pass the dialog as "this"',
+								() => {
+									expect(callback.mock.instances[0]).to.equal(dialog);
+								});
+
+							it('should hide the modal',
+								() => {
+									expect(hidden).toHaveBeenCalledWith();
+								});
+						});
 				});
 
-				it('should hide the modal', () => {
-					expect(hidden).toHaveBeenCalledWith();
-				});
-			});
+			describe('with a callback which returns false',
+				() => {
+					beforeEach(() => {
+						callback = vi.fn().mockReturnValue(false);
 
-			describe('when clicking the close button', () => {
-				beforeEach(() => {
-					dialog?.querySelector<HTMLElement>('.close')?.click();
-				});
+						dialog = bootbox.alert({
+							message: 'Hello!',
+							callback: callback
+						});
 
-				it('should hide the modal', () => {
-					expect(hidden).toHaveBeenCalledWith();
-				});
-			});
+						const modalInstance = bootstrap.Modal.getInstance(dialog);
+						hidden = vi.spyOn(modalInstance, 'hide');
+					});
 
-			describe('when triggering the escape event', () => {
-				beforeEach(() => {
-					dialog?.dispatchEvent(new Event('escape.close.bb'));
-				});
+					describe('when dismissing the dialog by clicking OK',
+						() => {
+							beforeEach(() => {
+								dialog?.querySelector<HTMLElement>('.bootbox-accept')?.click();
+							});
 
-				it('should hide the modal', () => {
-					expect(hidden).toHaveBeenCalledWith();
+							it('should invoke the callback',
+								() => {
+									expect(callback).toHaveBeenCalled();
+								});
+
+							it('should pass the dialog as "this"',
+								() => {
+									expect(callback.mock.instances[0]).to.equal(dialog);
+								});
+
+							it('should not hide the modal',
+								() => {
+									expect(hidden).not.toHaveBeenCalled();
+								});
+						});
+
+					describe('when clicking the close button',
+						() => {
+							beforeEach(() => {
+								dialog?.querySelector<HTMLElement>('.close')?.click();
+							});
+
+							it('should invoke the callback',
+								() => {
+									expect(callback).toHaveBeenCalled();
+								});
+
+							it('should pass the dialog as "this"',
+								() => {
+									expect(callback.mock.instances[0]).to.equal(dialog);
+								});
+
+							it('should not hide the modal',
+								() => {
+									expect(hidden).not.toHaveBeenCalled();
+								});
+						});
+
+					describe('when triggering the escape event',
+						() => {
+							beforeEach(() => {
+								dialog?.dispatchEvent(new Event('escape.close.bb'));
+							});
+
+							it('should invoke the callback',
+								() => {
+									expect(callback).toHaveBeenCalled();
+								});
+
+							it('should pass the dialog as "this"',
+								() => {
+									expect(callback.mock.instances[0]).to.equal(dialog);
+								});
+
+							it('should not hide the modal',
+								() => {
+									expect(hidden).not.toHaveBeenCalled();
+								});
+						});
 				});
-			});
 		});
-
-		describe('with a simple callback', () => {
-			beforeEach(() => {
-				callback = vi.fn();
-
-				dialog = bootbox.alert({
-					message:'Hello!',
-					callback: callback
-				});
-
-				const modalInstance = bootstrap.Modal.getInstance(dialog);
-				hidden = vi.spyOn(modalInstance, 'hide');
-			});
-
-			describe('when dismissing the dialog by clicking OK', () => {
-				beforeEach(() => {
-					dialog?.querySelector<HTMLElement>('.bootbox-accept')?.click();
-				});
-
-				it('should invoke the callback', () => {
-					expect(callback).toHaveBeenCalled();
-				});
-
-				it('should pass the dialog as "this"', () => {
-					expect(callback.mock.instances[0]).to.equal(dialog);
-				});
-
-				it('should hide the modal', () => {
-					expect(hidden).toHaveBeenCalledWith();
-				});
-			});
-
-			describe('when clicking the close button', () => {
-				beforeEach(() => {
-					dialog?.querySelector<HTMLElement>('.close')?.click();
-				});
-
-				it('should invoke the callback', () => {
-					expect(callback).toHaveBeenCalled();
-				});
-
-				it('should pass the dialog as "this"', () => {
-					expect(callback.mock.instances[0]).to.equal(dialog);
-				});
-
-				it('should hide the modal', () => {
-					expect(hidden).toHaveBeenCalledWith();
-				});
-			});
-
-			describe('when triggering the escape event', () => {
-				beforeEach(() => {
-					dialog?.dispatchEvent(new Event('escape.close.bb'));
-				});
-
-				it('should invoke the callback', () => {
-					expect(callback).toHaveBeenCalled();
-				});
-
-				it('should pass the dialog as "this"', () => {
-					expect(callback.mock.instances[0]).to.equal(dialog);
-				});
-
-				it('should hide the modal', () => {
-					expect(hidden).toHaveBeenCalledWith();
-				});
-			});
-		});
-
-		describe('with a callback which returns false', () => {
-			beforeEach(() => {
-				callback = vi.fn().mockReturnValue(false);
-
-				dialog = bootbox.alert({
-					message:'Hello!',
-					callback: callback
-				});
-
-				const modalInstance = bootstrap.Modal.getInstance(dialog);
-				hidden = vi.spyOn(modalInstance, 'hide');
-			});
-
-			describe('when dismissing the dialog by clicking OK', () => {
-				beforeEach(() => {
-					dialog?.querySelector<HTMLElement>('.bootbox-accept')?.click();
-				});
-
-				it('should invoke the callback', () => {
-					expect(callback).toHaveBeenCalled();
-				});
-
-				it('should pass the dialog as "this"', () => {
-					expect(callback.mock.instances[0]).to.equal(dialog);
-				});
-
-				it('should not hide the modal', () => {
-					expect(hidden).not.toHaveBeenCalled();
-				});
-			});
-
-			describe('when clicking the close button', () => {
-				beforeEach(() => {
-					dialog?.querySelector<HTMLElement>('.close')?.click();
-				});
-
-				it('should invoke the callback', () => {
-					expect(callback).toHaveBeenCalled();
-				});
-
-				it('should pass the dialog as "this"', () => {
-					expect(callback.mock.instances[0]).to.equal(dialog);
-				});
-
-				it('should not hide the modal', () => {
-					expect(hidden).not.toHaveBeenCalled();
-				});
-			});
-
-			describe('when triggering the escape event', () => {
-				beforeEach(() => {
-					dialog?.dispatchEvent(new Event('escape.close.bb'));
-				});
-
-				it('should invoke the callback', () => {
-					expect(callback).toHaveBeenCalled();
-				});
-
-				it('should pass the dialog as "this"', () => {
-					expect(callback.mock.instances[0]).to.equal(dialog);
-				});
-
-				it('should not hide the modal', () => {
-					expect(hidden).not.toHaveBeenCalled();
-				});
-			});
-		});
-	});
