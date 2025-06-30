@@ -26,7 +26,6 @@ describe('bootbox.alert', () => {
 	  });
 	describe('basic usage tests', () => {
 		describe('with no arguments', () => {
-			let create;
 
 			beforeEach(() => {
 				create = () => {

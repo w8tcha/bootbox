@@ -243,17 +243,6 @@ function dialog (options: Options) {
 
         if (options.closeButton) {
             let closeButton = generateElement(templates.closeButton);
-            // TODO : Remove
-            /*if (options.bootstrap < 5) {
-                closeButton.innerHTML = '&#215;';
-            }
-
-           
-            if (options.bootstrap < 4) {
-                header.prepend(closeButton);
-            } else {
-                
-            }*/
            header.append(closeButton);
         }
 
@@ -269,22 +258,22 @@ function dialog (options: Options) {
     if (!options.reusable) {
         // make sure we unbind any listeners once the dialog has definitively been dismissed
         dialog.addEventListener('hide.bs.modal',
-            function (e) {
-               if (e.target === dialog) {
-                dialog.removeEventListener('escape.close.bb', function(){});
-                dialog.removeEventListener('click', function(){});
-               }
+            e => {
+	            if (e.target === dialog) {
+		            dialog.removeEventListener('escape.close.bb', () => {});
+		            dialog.removeEventListener('click', () => {});
+	            }
             },
             { once: true });
 
         dialog.addEventListener('hidden.bs.modal',
-            function (e) {
-                if (e.target === dialog) {
-                    // Ensure we don't accidentally intercept hidden events triggered by children of the current dialog. 
-                    // We shouldn't need to handle this anymore, now that Bootstrap namespaces its events, but still worth doing.
-                    dialog.remove();
-                }
-                //dialog = null;
+            e => {
+	            if (e.target === dialog) {
+		            // Ensure we don't accidentally intercept hidden events triggered by children of the current dialog. 
+		            // We shouldn't need to handle this anymore, now that Bootstrap namespaces its events, but still worth doing.
+		            dialog.remove();
+	            }
+	            //dialog = null;
             },
             { once: true });
     }
@@ -331,29 +320,29 @@ function dialog (options: Options) {
         // Prevents the event from propagating to the backdrop, when something inside the dialog is clicked
         addEventListener(dialog,
             'mousedown',
-            function (e) {
-                e.stopPropagation();
+            e => {
+	            e.stopPropagation();
 
-                startedOnBody = true;
+	            startedOnBody = true;
             }, '.modal-content');
 
         // A boolean true/false according to the Bootstrap docs should show a dialog the user can dismiss by clicking on the background.
         // We always only ever pass static/false to the actual $.modal function because with "true" we can't trap this event (the .modal-backdrop swallows it).
         // However, we still want to sort-of respect true and invoke the escape mechanism instead
-        addEventListener(dialog, 'click.dismiss.bs.modal', function (e) {
-            if (startedOnBody || e.target !== e.currentTarget) {
-                return;
-            }
-            trigger(dialog, 'escape.close.bb');
+        addEventListener(dialog, 'click.dismiss.bs.modal', e => {
+	        if (startedOnBody || e.target !== e.currentTarget) {
+		        return;
+	        }
+	        trigger(dialog, 'escape.close.bb');
         });
     }
 
     dialog.addEventListener('escape.close.bb',
-        function (e) {
-            // The if() statement looks redundant but it isn't; without it, if we *didn't* have an onEscape handler then processCallback would automatically dismiss the dialog
-            if (callbacks.onEscape) {
-                processCallback(e, dialog, callbacks.onEscape);
-            }
+        e => {
+	        // The if() statement looks redundant but it isn't; without it, if we *didn't* have an onEscape handler then processCallback would automatically dismiss the dialog
+	        if (callbacks.onEscape) {
+		        processCallback(e, dialog, callbacks.onEscape);
+	        }
         });
 
     dialog.addEventListener('click',
@@ -378,10 +367,10 @@ function dialog (options: Options) {
         });
 
     dialog.addEventListener('keyup',
-        function (e: any) {
-            if (e.which === 27) {
-                trigger(dialog, 'escape.close.bb');
-            }
+        (e: any) => {
+	        if (e.which === 27) {
+		        trigger(dialog, 'escape.close.bb');
+	        }
         });
 
     /*
@@ -419,7 +408,7 @@ function dialog (options: Options) {
         * @returns  A jQuery object upon which Bootstrap's modal function has been called
         */
 function alert() {
-	let options = mergeDialogOptions('alert', ['ok'], ['message', 'callback'], arguments);
+	const options = mergeDialogOptions('alert', ['ok'], ['message', 'callback'], arguments);
 
 	if (options.callback && typeof options.callback !== 'function') {
 		throw new Error('alert requires the "callback" property to be a function when provided');
@@ -450,8 +439,8 @@ function confirm () {
     }
 
     // Overrides; undo anything the user tried to set they shouldn't have
-    var cancel = options.buttons!['cancel'];
-    var confirm = options.buttons!['confirm'];
+    let cancel = options.buttons!['cancel'];
+    let confirm = options.buttons!['confirm'];
 
     if (!confirm)
     {
@@ -543,9 +532,7 @@ function prompt () {
         if (options.inputType === 'checkbox') {
             const checkedInputs = Array.from(input.querySelectorAll<HTMLInputElement>('input[type="checkbox"]:checked'));
 
-            value = Array.from(checkedInputs).map(function (e) {
-                return e.value;
-            });
+            value = Array.from(checkedInputs).map(e => e.value);
 
             if (options.required === true && checkedInputs.length === 0) {
                 // prevents button callback from being called if no checkboxes have been checked
@@ -805,14 +792,14 @@ function prompt () {
     form.append(input);
 
     form.addEventListener('submit',
-        function (e) {
-            e.preventDefault();
-            // Fix for SammyJS (or similar JS routing library) hijacking the form post.
-            e.stopPropagation();
+        e => {
+	        e.preventDefault();
+	        // Fix for SammyJS (or similar JS routing library) hijacking the form post.
+	        e.stopPropagation();
 
-            // @TODO can we actually click *the* button object instead?
-            // e.g. buttons.confirm.click() or similar
-            promptDialog.querySelector<HTMLElement>('.bootbox-accept')?.click();
+	        // @TODO can we actually click *the* button object instead?
+	        // e.g. buttons.confirm.click() or similar
+	        promptDialog.querySelector<HTMLElement>('.bootbox-accept')?.click();
         });
 
     if (options.message && options.message.trim() !== '') {
@@ -832,9 +819,9 @@ function prompt () {
 
     // ...and replace it with one focusing our input, if possible
     promptDialog.addEventListener('shown.bs.modal',
-        function () {
-            // Need the closure here since input isn't can object otherwise
-            input.focus();
+        () => {
+	        // Need the closure here since input isn't can object otherwise
+	        input.focus();
         });
 
     const modal = new bootstrap.Modal(promptDialog);
@@ -1009,12 +996,12 @@ function createLabels(labels: string[], locale: string) : Buttons {
 }
 
 function createButton(label: string, locale: string) : Button {
-    var button: Button = {
-                    label: getText(label.toUpperCase(), locale),
-                    className: ''
-                };
+	const button: Button = {
+		label: getText(label.toUpperCase(), locale),
+		className: ''
+	};
 
-    return button;
+	return button;
 }
 
 // Get localized text from a locale. Defaults to 'en' locale if no locale provided or a non-registered locale is requested
@@ -1053,9 +1040,9 @@ function sanitize(options: Options) : Options {
 
     total = getKeyLength(buttons);
 
-    var index = 0;
+    let index = 0;
 
-    for (var [key, button] of Object.entries(buttons)) {
+    for (let [key, button] of Object.entries(buttons)) {
         if (typeof button === 'function') {
             // Short form, assume value is our callback. Since button isn't an object it isn't a reference either so re-assign it
             button = buttons[key] = {
