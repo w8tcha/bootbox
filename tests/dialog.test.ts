@@ -4,7 +4,6 @@ import * as bootstrap from 'bootstrap';
 
   let dialog: HTMLElement | null;
   let create:any;
-  let badCreate:any;
   let hidden: any;
   let callback: any;
   let e: any;
@@ -86,16 +85,16 @@ describe('bootbox.dialog', () => {
       });
     });
     it('adds the bootbox class to the dialog', () => {
-       expect(dialog.classList.contains('bootbox')).to.be.true;
+       expect(dialog?.classList).toContain('bootbox');
     });
     it('adds the bootstrap modal class to the dialog', () => {
-       expect(dialog.classList.contains('modal')).to.be.true;
+       expect(dialog?.classList).toContain('modal');
     });
     it('adds the fade class to the dialog', () => {
-       expect(dialog.classList.contains('fade')).to.be.true;
+       expect(dialog?.classList).toContain('fade');
     });
     it('shows the expected message', () => {
-       expect(dialog.querySelector('.bootbox-body').innerHTML).to.equal('test');
+       expect(dialog?.querySelector<HTMLElement>('.bootbox-body')?.innerHTML).to.equal('test');
     });
     it('has a header', () => {
        expect(exists('.modal-header') ).to.be.not.null;
@@ -107,188 +106,6 @@ describe('bootbox.dialog', () => {
        expect(exists('.modal-footer')).not.to.be.ok;
     });
   });
-  /*describe('when creating a dialog with a button', () => {
-
-    beforeEach(() => {
-    create = (button = {}) => {
-      dialog = bootbox.dialog({
-        message: 'test',
-        buttons: {
-          one: button
-        }
-      });
-    };
-    describe('when the button has no callback', () => {
-      beforeEach(() => {
-        create({
-          label: 'My Label'
-        });
-        const modalInstance = bootstrap.Modal.getInstance(dialog);
-                
-         hidden = vi.spyOn(modalInstance, 'hide');
-      });
-      it('shows a footer', () => {
-         expect(exists('.modal-footer') ).to.be.not.null;
-      });
-      it('shows one button', () => {
-         expect(find('.btn')).not.null;
-      });
-      it('shows the correct button text', () => {
-         expect(dialog.querySelector('.btn').innerHTML).to.equal('My Label');
-      });
-      it('applies the correct button class', () => {
-         expect(this['class']('.btn', 'btn-primary')).to.be.true;
-      });
-      describe('when triggering the escape event', () => {
-        beforeEach(() => {
-           dialog.dispatchEvent(new Event('escape.close.bb'));
-        });
-         it('should not hide the modal', () => {
-           expect(hidden).not.toHaveBeenCalled();
-        });
-      });
-       describe('when clicking the close button', () => {
-        beforeEach(() => {
-           dialog.querySelector('.close').click();
-        });
-         it('should hide the modal', () => {
-           expect(hidden).toHaveBeenCalled();
-        });
-      });
-    });
-    describe('when the button has a label and callback', () => {
-      beforeEach(() => {
-        callback = vi.fn();
-        create({
-          label: 'Another Label',
-          callback: callback
-        });
-       const modalInstance = bootstrap.Modal.getInstance(dialog);
-                
-         hidden = vi.spyOn(modalInstance, 'hide');
-      });
-      it('shows a footer', () => {
-         expect(exists('.modal-footer') ).to.be.not.null;
-      });
-      it('shows the correct button text', () => {
-         expect(dialog.querySelector('.btn').innerHTML).to.equal('Another Label');
-      });
-      describe('when dismissing the dialog by clicking OK', () => {
-        beforeEach(() => {
-           dialog.querySelector('.btn-primary').click();
-        });
-        it('should invoke the callback', () => {
-           expect(callback).toHaveBeenCalled();
-        });
-        it('should pass the dialog as "this"', () => {
-           expect(callback.mock.instances[0]).to.equal(dialog);
-        });
-         it('should hide the modal', () => {
-           expect(hidden).toHaveBeenCalledWith();
-        });
-      });
-      describe('when triggering the escape event', () => {
-        beforeEach(() => {
-           dialog.dispatchEvent(new Event('escape.close.bb'));
-        });
-        it('should not invoke the callback', () => {
-           expect(callback).not.toHaveBeenCalled();
-        });
-         it('should not hide the modal', () => {
-           expect(hidden).not.toHaveBeenCalled();
-        });
-      });
-      /* describe('when clicking the close button', () => {
-        beforeEach(() => {
-           dialog.querySelector('.close').click();
-        });
-        it('should not invoke the callback', () => {
-           expect(callback).not.toHaveBeenCalled();
-        });
-         it('should hide the modal', () => {
-           expect(hidden).toHaveBeenCalled();
-        });
-      });*/
-    /*});
-    describe('when the button has a custom class', () => {
-      beforeEach(() => {
-         create({
-          label: 'Test Label',
-          className: 'btn-custom'
-        });
-      });
-      it('shows the correct button text', () => {
-         expect(dialog.querySelector('.btn').innerHTML).to.equal('Test Label');
-      });
-       it('adds the custom class to the button', () => {
-         expect(this['class']('.btn', 'btn-custom')).to.be.true;
-      });
-    });
-     describe('when the button has no explicit label', () => {
-      beforeEach(() => {
-         create = function(buttons) {
-           dialog = bootbox.dialog({
-            message: 'test',
-            buttons: buttons
-          });
-        };
-      });
-      describe('when its value is an object', () => {
-        beforeEach(() => {
-           create({
-            'Short form': {
-              className: 'btn-custom',
-              callback: function() {
-                 true;
-              }
-            }
-          });
-        });
-        it('uses the key name as the button text', () => {
-           expect(dialog.querySelector('.btn').innerHTML).to.equal('Short form');
-        });
-         it('adds the custom class to the button', () => {
-           expect(this['class']('.btn', 'btn-custom')).to.be.true;
-        });
-      });
-      describe('when its value is a function', () => {
-        beforeEach(() => {
-          callback = vi.fn();
-           create({
-            my_label: callback
-          });
-        });
-        it('uses the key name as the button text', () => {
-           expect(dialog.querySelector('.btn').innerHTML).to.equal('my_label');
-        });
-         describe('when dismissing the dialog by clicking the button', () => {
-          beforeEach(() => {
-             dialog.querySelector('.btn-primary').click();
-          });
-          it('should invoke the callback', () => {
-             expect(callback).toHaveBeenCalled();
-          });
-           it('should pass the dialog as "this"', () => {
-             expect(callback.mock.instances[0]).to.equal(dialog);
-          });
-        });
-      });*/
-       /*describe('when its value is not an object or function', () => {
-        beforeEach(() => {
-           this.badCreate = (function(_this) {
-             function() {
-               _create({
-                'Short form': 'hello world'
-              });
-            };
-          })(this);
-        });
-         it('throws an error', () => {
-           expect(this.badCreate).to.throw('button with key "Short form" must be an object');
-        });*/
-     /* });
-    });
-  });*/
   describe('when creating a dialog with a title', () => {
     beforeEach(() => {
       dialog = bootbox.dialog({
@@ -300,10 +117,10 @@ describe('bootbox.dialog', () => {
        expect(exists('.modal-header')).to.be.not.null;
     });
     it('shows the correct title text', () => {
-       expect(dialog.querySelector('.modal-title').innerHTML).to.equal('My Title');
+       expect(dialog?.querySelector<HTMLElement>('.modal-title')?.innerHTML).to.equal('My Title');
     });
      it('has a close button inside the header', () => {
-       expect(dialog.querySelector('.modal-header .close')).to.be.not.null;
+       expect(dialog?.querySelector('.modal-header .close')).to.be.not.null;
     });
   });
   describe('when creating a dialog with no close button', () => {
@@ -324,42 +141,6 @@ describe('bootbox.dialog', () => {
 		   dialog?.dispatchEvent(keyUpEvent);
       };
     });
-    /*describe('with a simple callback', () => {
-      beforeEach(() => {
-        callback = vi.fn();
-        dialog = bootbox.dialog({
-          message: 'Are you sure?',
-          onEscape: callback
-        });
-        const modalInstance = bootstrap.Modal.getInstance(dialog);
-                
-         hidden = vi.spyOn(modalInstance, 'hide');
-      });
-       describe('when triggering the keyup event', () => {
-        describe('when the key is not the escape key', () => {
-          beforeEach(() => {
-             e(15);
-          });
-           it('should not hide the modal', () => {
-             expect(hidden).not.toHaveBeenCalled();
-          });
-        });
-        describe('when the key is the escape key', () => {
-          beforeEach(() => {
-			  e(27);
-          });
-          it('should invoke the callback', () => {
-             expect(callback).toHaveBeenCalled();
-          });
-          it('should pass the dialog as "this"', () => {
-             expect(callback.mock.instances).to.equal(dialog);
-          });
-           it('should hide the modal', () => {
-             expect(hidden).toHaveBeenCalledWith();
-          });
-        });
-      });
-    });*/
      describe('with a callback which returns false', () => {
       beforeEach(() => {
         callback = vi.fn().mockReturnValue(false);
@@ -371,20 +152,6 @@ describe('bootbox.dialog', () => {
                 
         hidden = vi.spyOn(modalInstance, 'hide');
       });
-      /*describe('when triggering the escape keyup event', () => {
-        beforeEach(() => {
-			  e(27);
-        });
-        it('should invoke the callback', () => {
-           expect(callback).toHaveBeenCalled();
-        });
-        it('should pass the dialog as "this"', () => {
-           expect(callback.mock.instances[0]).to.equal(dialog);
-        });
-         it('should not hide the modal', () => {
-           expect(hidden).not.toHaveBeenCalled();
-        });
-      });*/
        describe('when clicking the escape button', () => {
         beforeEach(() => {
            document.querySelector<HTMLElement>('.btn-close')?.click();
@@ -393,7 +160,7 @@ describe('bootbox.dialog', () => {
            expect(callback).toHaveBeenCalled();
         });
         it('should pass the dialog as "this"', () => {
-		 expect(callback.mock.instances[0]).to.equal(dialog);
+          expect(callback.mock.instances[0]).to.equal(dialog);
         });
          it('should not hide the modal', () => {
            expect(hidden).not.toHaveBeenCalled();

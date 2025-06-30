@@ -32,12 +32,10 @@ export default defineConfig({
 	},
 	test: {
 		environment: 'jsdom',
-		//environment: 'happy-dom',
 		globals: true,
 		include: [
 			'tests/**/*.test.ts'],
 			//'tests/bootbox.test.ts'],
-		// Re-define "forceRerunTriggers" to exclude `package.json` and `test_tmp/**/package.json` to prevent infinite watch loop
-		forceRerunTriggers: ['./vitest.config.js']
+		forceRerunTriggers: ['./vite.config.ts']
 	}
 });

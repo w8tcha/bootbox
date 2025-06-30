@@ -225,8 +225,7 @@ describe('Bootbox', () => {
       e = function(target) {
 		  const dismissEvent = new CustomEvent('click.dismiss.bs.modal', {detail: { target: target}});
 		  
-		  
-        dialog.dispatchEvent(dismissEvent);
+        dialog?.dispatchEvent(dismissEvent);
       };
     });
 
