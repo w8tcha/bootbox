@@ -1,0 +1,1 @@
+export type CallbackFunction = (this: any, value?: any) => any;

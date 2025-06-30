@@ -20,7 +20,6 @@
       "require": true,
       "expect": true,
       "bootbox": true,
-      "sinon": true,
       "$": false
     }
 }
