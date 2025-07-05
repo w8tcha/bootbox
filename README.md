@@ -1,5 +1,7 @@
 # Bootbox - Bootstrap powered alert, confirm and flexible dialog boxes
 
+FORKED Version using Vanilla Javascript instead of jQuery
+
 Please see http://bootboxjs.com for full usage instructions, or head over to http://paynedigital.com/bootbox for
 the original writeup about the project.
 
@@ -12,7 +14,7 @@ Please see the [CONTRIBUTING](https://github.com/bootboxjs/bootbox/blob/master/C
 Tests are run using [Karma](http://karma-runner.github.io/0.8/index.html) using the Mocha test adapter. To run the tests yourself, simply run 
 
 ```
-npm install
+npm i w8tcha/bootbox
 ``` 
 
 within the project followed by 
@@ -24,27 +26,16 @@ npm test
 Tests are run against the generated files contained in the `/dist` directory - regenerate those files and run the Karma tests by simply running Grunt:
 
 ```
-grunt
+npm run build
 ```
 
 When submitting pull requests, ensure your tests pass. **Pull-requests with failing tests will be rejected.** See the
 [CONTRIBUTING](https://github.com/bootboxjs/bootbox/blob/master/CONTRIBUTING.md) file for more information.
 
-## A note on Bootstrap dependencies
+## 6.0.5 (Latest Release)
 
-Bootbox **6.0.0** is the first release to support Bootstrap 5.0.0.
-
-Bootbox **5.0.0** is the first release to support Bootstrap 4.0.0.
-
-Bootbox **4.0.0** is the first release to support Bootstrap 3.0.0.
-
-Bootbox **3.3.0** is the *last* release to support Bootstrap 2.2.x.
-
-Much more dependency information can be found [on the Bootbox website](http://bootboxjs.com/getting-started.html#bootbox-dependencies).
-
-## 6.0.4 (Latest Release)
- 
- - Updates `step` to allow setting value for date inputs
+- Updates prompt input validation to apply `was-validated` class to form when **OK** button is clicked
+- Updates prompt input to trigger form submit when "enter" key is pressed
 
 For a full list of releases and changes please see [the changelog](https://github.com/bootboxjs/bootbox/blob/master/CHANGELOG.md).
 
@@ -52,7 +43,7 @@ For a full list of releases and changes please see [the changelog](https://githu
 
 (The MIT License)
 
-Copyright (C) 2011-2025 by Nick Payne <nick@kurai.co.uk>
+Copyright (C) by Nick Payne <nick@kurai.co.uk>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

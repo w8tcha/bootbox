@@ -1,0 +1,1 @@
+export type CustomProperties = Record<string, any>;

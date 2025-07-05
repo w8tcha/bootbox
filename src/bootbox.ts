@@ -6,8 +6,9 @@ import { InputGroup } from './interfaces/inputGroup.ts';
 import Callback from './interfaces/callback.ts';
 import { DEFAULT_LOCALES, DEFAULT_OPTIONS, DEFAULT_TEMPLATES } from './defaults.ts';
 import { dateIsValid, timeIsValid, trigger } from './lib/utils.ts';
+import { CustomProperties } from './types/customProperties.ts';
 
-const VERSION = '6.0.4';
+const VERSION = '6.0.5';
 
 const locales = DEFAULT_LOCALES;
 const templates = DEFAULT_TEMPLATES;
@@ -120,7 +121,7 @@ function initFn(_$:any): any {
 /**
  * The core dialog helper function, which can be used to create any custom Bootstrap modal. 
  * @param {Object} options - An object used to configure the various properties which define a Bootbox dialog
- * @returns A jQuery object upon which Bootstrap's modal function has been called
+ * @returns an object upon which Bootstrap's modal function has been called
  */
 function dialog (options: Options) {
     if (bootstrap.Modal === undefined) {
@@ -268,12 +269,11 @@ function dialog (options: Options) {
 
         dialog.addEventListener('hidden.bs.modal',
             e => {
-	            if (e.target === dialog) {
-		            // Ensure we don't accidentally intercept hidden events triggered by children of the current dialog. 
+                if (e.target === dialog) {
+                    // Ensure we don't accidentally intercept hidden events triggered by children of the current dialog. 
 		            // We shouldn't need to handle this anymore, now that Bootstrap namespaces its events, but still worth doing.
 		            dialog.remove();
 	            }
-	            //dialog = null;
             },
             { once: true });
     }
@@ -368,7 +368,7 @@ function dialog (options: Options) {
 
     dialog.addEventListener('keyup',
         (e: any) => {
-	        if (e.which === 27) {
+	        if (e.which === 27 || e.detail.which === 27) {
 		        trigger(dialog, 'escape.close.bb');
 	        }
         });
@@ -405,10 +405,10 @@ function dialog (options: Options) {
 
 /**
         * Helper function to simulate the native alert() behavior. **NOTE**: This is non-blocking, so any code that must happen after the alert is dismissed should be placed within the callback function for this alert.
-        * @returns  A jQuery object upon which Bootstrap's modal function has been called
+        * @returns  An object upon which Bootstrap's modal function has been called
         */
-function alert() {
-	const options = mergeDialogOptions('alert', ['ok'], ['message', 'callback'], arguments);
+function alert(...args: any[]) {
+	const options = mergeDialogOptions('alert', ['ok'], ['message', 'callback'], args);
 
 	if (options.callback && typeof options.callback !== 'function') {
 		throw new Error('alert requires the "callback" property to be a function when provided');
@@ -425,13 +425,13 @@ function alert() {
 }
 
 /**
-         * Helper function to simulate the native confirm() behavior. **NOTE**: This is non-blocking, so any code that must happen after the confirm is dismissed should be placed within the callback function for this confirm.
-         * @returns A jQuery object upon which Bootstrap's modal function has been called
-         */
-function confirm () {
-    let options;
+ * Helper function to simulate the native confirm() behavior. **NOTE**: This is non-blocking, so any code that must happen after the confirm is dismissed should be placed within the callback function for this confirm.
+* @returns an object upon which Bootstrap's modal function has been called
+*/
+function confirm (...args: any[]) {
+    let options: Options;
 
-    options = mergeDialogOptions('confirm', ['cancel', 'confirm'], ['message', 'callback'], arguments);
+    options = mergeDialogOptions('confirm', ['cancel', 'confirm'], ['message', 'callback'], args);
 
     // confirm specific validation; they don't make sense without a callback so make sure it's present
     if (typeof options.callback !== 'function') {
@@ -462,8 +462,8 @@ function confirm () {
         return options.callback?.call(this, true);
     };
 
-    options.buttons!["cancel"] = cancel;
-    options.buttons!["confirm"] = confirm;
+    options.buttons!['cancel'] = cancel;
+    options.buttons!['confirm'] = confirm;
    
     return dialog(options);
 };
@@ -471,373 +471,410 @@ function confirm () {
 
 /**
  * Helper function to simulate the native prompt() behavior. **NOTE**: This is non-blocking, so any code that must happen after the prompt is dismissed should be placed within the callback function for this prompt.
- * @returns A jQuery object upon which Bootstrap's modal function has been called
+ * @returns an object upon which Bootstrap's modal function has been called
  */
-function prompt () {
-    let options: Options;
-    let promptDialog: HTMLElement;
-    let form: HTMLElement;
-    let input: HTMLElement;
-    let shouldShow: boolean;
-    let inputOptions;
+function prompt(...args: any[]) {
+	let options: Options;
+	let promptDialog: HTMLElement;
+	let form: HTMLElement;
+	let input: HTMLElement;
+	let shouldShow: boolean;
+	let inputOptions;
 
-    // We have to create our form first, otherwise its value is undefined when gearing up our options.
-    // @TODO this could be solved by allowing message to be a function instead...
-    form = generateElement(templates.form);
+	// We have to create our form first, otherwise its value is undefined when gearing up our options.
+	// @TODO this could be solved by allowing message to be a function instead...
+	form = generateElement(templates.form);
 
-    // prompt defaults are more complex than others in that users can override more defaults
-    options = mergeDialogOptions('prompt', ['cancel', 'confirm'], ['title', 'callback'], arguments);
+	// prompt defaults are more complex than others in that users can override more defaults
+	options = mergeDialogOptions('prompt', ['cancel', 'confirm'], ['title', 'callback'], args);
 
-    if (!options.value) {
-        options.value = defaults.value;
-    }
+	if (!options.value) {
+		options.value = defaults.value;
+	}
 
-    if (!options.inputType) {
-        options.inputType = defaults.inputType;
-    }
+	if (!options.inputType) {
+		options.inputType = defaults.inputType;
+	}
 
-    // Capture the user's 'show' value; we always set this to false before spawning the dialog to give us a chance to attach some handlers to it, but we need to make sure we respect a preference not to show it
-    shouldShow = (options.show === undefined) ? defaults.show : options.show;
+	// Capture the user's 'show' value; we always set this to false before spawning the dialog to give us a chance to attach some handlers to it, but we need to make sure we respect a preference not to show it
+	shouldShow = (options.show === undefined) ? defaults.show : options.show;
 
-    // This is required prior to calling the dialog builder below - we need to add an event handler just before the prompt is shown
-    options.show = false;
+	// This is required prior to calling the dialog builder below - we need to add an event handler just before the prompt is shown
+	options.show = false;
 
-    // Handles the 'cancel' action
-    var cancel = options.buttons!['cancel'];
+	// Handles the 'cancel' action
+	var cancel = options.buttons!['cancel'];
 
-    if (!cancel)
-    {
-        options.buttons!['cancel'] = createButton('cancel', options.locale!);
-        cancel = options.buttons!['cancel'];
-    }
+	if (!cancel) {
+		options.buttons!['cancel'] = createButton('cancel', options.locale!);
+		cancel = options.buttons!['cancel'];
+	}
 
-    cancel.callback = options.onEscape = function () {
-        return options.callback?.call(this, null);
-    };
+	cancel.callback = options.onEscape = function() {
+		return options.callback?.call(this, null);
+	};
 
-    options.buttons!["cancel"] = cancel;
+	options.buttons!['cancel'] = cancel;
 
-    // Prompt submitted - extract the prompt value. This requires a bit of work, given the different input types available.
-    var confirm = options.buttons!['confirm'];
+	// Prompt submitted - extract the prompt value. This requires a bit of work, given the different input types available.
+	var confirm = options.buttons!['confirm'];
 
-    if (!confirm)
-    {
-        options.buttons!['confirm'] = createButton('confirm', options.locale!);
-        confirm = options.buttons!['confirm']; 
-    }
+	if (!confirm) {
+		options.buttons!['confirm'] = createButton('confirm', options.locale!);
+		confirm = options.buttons!['confirm'];
+	}
 
-    confirm.callback = function () {
-        let value;
+	confirm.callback = function() {
+		let value;
 
-        if (options.inputType === 'checkbox') {
-            const checkedInputs = Array.from(input.querySelectorAll<HTMLInputElement>('input[type="checkbox"]:checked'));
+		form.classList.add('was-validated');
 
-            value = Array.from(checkedInputs).map(e => e.value);
+		if (options.inputType === 'checkbox') {
+			const checkedInputs =
+				Array.from(input.querySelectorAll<HTMLInputElement>('input[type="checkbox"]:checked'));
 
-            if (options.required === true && checkedInputs.length === 0) {
-                // prevents button callback from being called if no checkboxes have been checked
-                return false;
-            }
-        } else if (options.inputType === 'radio') {
-            value = input.querySelector<HTMLInputElement>('input[type="radio"]:checked')!.value;
-        } else {
-            value = (input as any).value;
+			value = Array.from(checkedInputs).map(e => e.value);
+
+			if (options.required === true && checkedInputs.length === 0) {
+				// prevents button callback from being called if no checkboxes have been checked
+				return false;
+			}
+		} else if (options.inputType === 'radio') {
+			value = input.querySelector<HTMLInputElement>('input[type="radio"]:checked')!.value;
+		} else {
+			let el = input as HTMLInputElement;
+
+			// this must be done every time; otherwise, input is reported invalid even if value is valid
+			el.setCustomValidity('');
+
+			// trigger built-in validation if checkValidity() function is defined
+			if (el.checkValidity && !el.checkValidity()) {
+				// If a custom error message was provided, add it now
+				if (options.errorMessage) {
+					el.setCustomValidity(options.errorMessage);
+				}
+
+				// trigger built-in validation message if reportValidity() function is defined
+				if (el.reportValidity) {
+					el.reportValidity();
+				}
+
+				// prevents button callback from being called
+				return false;
+			} else {
+				if (options.inputType === 'select' && options.multiple === true) {
+					value = Array.from(input.querySelectorAll<HTMLInputElement>('option:checked'))
+						.map(option => option.value);
+				} else {
+					value = el.value;
+				}
+			}
+		}
+
+		return options.callback?.call(this, value);
+	};
+
+	options.buttons!['confirm'] = confirm;
+
+	// prompt-specific validation
+	if (!options.title) {
+		throw new Error('prompt requires a title');
+	}
+
+	if (typeof options.callback !== 'function') {
+		throw new Error('prompt requires a callback');
+	}
+
+	var inputs = templates.inputs as any;
+
+	if (!inputs[options.inputType]) {
+		throw new Error('Invalid prompt type');
+	}
+
+	// Create the input based on the supplied type
+	input = generateElement(inputs[options.inputType]);
+
+	if (options.inputType !== 'textarea') {
+      input.addEventListener('keydown', function(ev: KeyboardEvent) {
+        if (ev.key === 'Enter') {
+          ev.preventDefault();
+          var acceptButton = promptDialog.querySelector<HTMLElement>('.bootbox-accept')!;
+
+		  trigger(acceptButton, 'click');
         }
-
-        return options.callback?.call(this, value);
-    };
-
-    options.buttons!["confirm"] = confirm;
-
-    // prompt-specific validation
-    if (!options.title) {
-        throw new Error('prompt requires a title');
+      });
     }
 
-    if (typeof options.callback !== 'function') {
-        throw new Error('prompt requires a callback');
-    }
-
-    var inputs = templates.inputs as any;
-
-    if (!inputs[options.inputType]) {
-        throw new Error('Invalid prompt type');
-    }
-
-    // Create the input based on the supplied type
-    input = generateElement(inputs[options.inputType]);
-
-    switch (options.inputType) {
-        case 'text':
-        case 'textarea':
-        case 'email':
-        case 'password':
-            (input as HTMLInputElement).value = options.value.toString();
-
-            if (options.placeholder) {
-                input.setAttribute('placeholder', options.placeholder);
-            }
-
-            if (options.pattern) {
-                input.setAttribute('pattern', options.pattern);
-            }
-
-            if (options.maxlength) {
-                input.setAttribute('maxlength', options.maxlength.toString());
-            }
-
-            if (options.required) {
-                (input as HTMLInputElement).required = true;
-            }
-
-            if (options.rows && !isNaN(parseInt(options.rows.toString()))) {
-                if (options.inputType === 'textarea') {
-                    input.setAttribute('rows', options.rows.toString());
-                }
-            }
-            break;
-
-        case 'date':
-        case 'time':
-        case 'number':
-        case 'range':
-            (input as HTMLInputElement).value = options.value.toString();
-
-            if (options.placeholder) {
-                input.setAttribute('placeholder', options.placeholder);
-            }
-
-            if (options.pattern) {
-                input.setAttribute('pattern', options.pattern);
-            } else {
-                if (options.inputType === 'date') {
-                    // Add the ISO-8601 short date format as a fallback for browsers without native type="date" support
-                    input.setAttribute('pattern', '\d{4}-\d{2}-\d{2}');
-                } else if (options.inputType === 'time') {
-                    // Add an HH:MM pattern as a fallback for browsers without native type="time" support
-                    input.setAttribute('pattern', '\d{2}:\d{2}');
-                }
-            }
-
-            if (options.required) {
-                (input as HTMLInputElement).required = true;
-            }
-
-
-            if (options.step) {
-                if (typeof options.step === 'string' && (options.step === 'any' ||  parseFloat(options.step) > 0)) {
-                    input.setAttribute('step', options.step);
-                } 
-                else if (typeof options.step === 'number' && (!isNaN(options.step) && options.step > 0)) {
-                    input.setAttribute('step', options.step.toString());
-                }
-                else {
-                    throw new Error(
-                        '"step" must be a valid positive number or the value "any". See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-step for more information.');
-                }
-            }
-
-            if (minAndMaxAreValid(options.inputType, options.min, options.max)) {
-                if (options.min !== undefined) {
-                    input.setAttribute('min', options.min.toString());
-                }
-                if (options.max !== undefined) {
-                    input.setAttribute('max', options.max.toString());
-                }
-            }
-            break;
-
-        case 'select':
-            var groups: InputGroup = {};
-            inputOptions = options.inputOptions || [];
-
-            if (!Array.isArray(inputOptions)) {
-                throw new Error('Please pass an array of input options');
-            }
-
-            if (!inputOptions.length) {
-                throw new Error('prompt with "inputType" set to "select" requires at least one option');
-            }
+	switch (options.inputType) {
+	case 'text':
+	case 'textarea':
+	case 'email':
+	case 'password':
+		(input as HTMLInputElement).value = options.value.toString();
+
+		if (options.placeholder) {
+			input.setAttribute('placeholder', options.placeholder);
+		}
+
+		if (options.pattern) {
+			input.setAttribute('pattern', options.pattern);
+		}
+
+		if (options.maxlength) {
+			input.setAttribute('maxlength', options.maxlength.toString());
+		}
+
+		if (options.required) {
+			(input as HTMLInputElement).required = true;
+		}
+
+		if (options.inputType === 'textarea') {
+			if (options.rows && !isNaN(parseInt(options.rows.toString()))) {
+				input.setAttribute('rows', options.rows.toString());
+			}
+		}
+		break;
+
+	case 'date':
+	case 'time':
+	case 'number':
+	case 'range':
+		(input as HTMLInputElement).value = options.value.toString();
+
+		if (options.placeholder) {
+			input.setAttribute('placeholder', options.placeholder);
+		}
+
+		if (options.pattern) {
+			input.setAttribute('pattern', options.pattern);
+		} else {
+			if (options.inputType === 'date') {
+				// Add the ISO-8601 short date format as a fallback for browsers without native type="date" support
+				input.setAttribute('pattern', '\d{4}-\d{2}-\d{2}');
+			} else if (options.inputType === 'time') {
+				// Add an HH:MM pattern as a fallback for browsers without native type="time" support
+				input.setAttribute('pattern', '\d{2}:\d{2}');
+			}
+		}
+
+		if (options.required) {
+			(input as HTMLInputElement).required = true;
+		}
+
+
+		if (options.step) {
+			if (typeof options.step === 'string' && (options.step === 'any' || parseFloat(options.step) > 0)) {
+				input.setAttribute('step', options.step);
+			} else if (typeof options.step === 'number' && (!isNaN(options.step) && options.step > 0)) {
+				input.setAttribute('step', options.step.toString());
+			} else {
+				throw new Error(
+					'"step" must be a valid positive number or the value "any". See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-step for more information.');
+			}
+		}
+
+		if (minAndMaxAreValid(options.inputType, options.min, options.max)) {
+			if (options.min !== undefined) {
+				input.setAttribute('min', options.min.toString());
+			}
+			if (options.max !== undefined) {
+				input.setAttribute('max', options.max.toString());
+			}
+		}
+		break;
+
+	case 'select':
+		var groups: InputGroup = {};
+		inputOptions = options.inputOptions || [];
+
+		if (!Array.isArray(inputOptions)) {
+			throw new Error('Please pass an array of input options');
+		}
+
+		if (!inputOptions.length) {
+			throw new Error('prompt with "inputType" set to "select" requires at least one option');
+		}
+
+		if (options.required) {
+			(input as HTMLInputElement).required = true;
+		}
+
+		if (options.multiple) {
+			(input as HTMLInputElement).multiple = true;
+		}
+
+		for (const [, option] of Object.entries(inputOptions)) {
+			// Assume the element to attach to is the input...
+			let elem = input;
 
-            if (options.required) {
-                (input as HTMLInputElement).required = true;
-            }
+			if (option.value === undefined || option.text === undefined) {
+				throw new Error('each option needs a "value" property and a "text" property');
+			}
 
-            if (options.multiple) {
-                (input as HTMLInputElement).multiple = true;
-            }
+			// ... but override that element if this option sits in a group
 
-            for (const [, option] of Object.entries(inputOptions)) {
-                // Assume the element to attach to is the input...
-                let elem = input;
+			if (option.group) {
 
-                if (option.value === undefined || option.text === undefined) {
-                    throw new Error('each option needs a "value" property and a "text" property');
-                }
+				// Initialise group if necessary
+				if (!groups[option.group]) {
+					var groupElement = generateElement('<optgroup />');
+					groupElement.setAttribute('label', option.group);
 
-                // ... but override that element if this option sits in a group
+					groups[option.group] = {
+						Content: groupElement
+					};
+				}
 
-                if (option.group) {
+				elem = groups[option.group].Content;
+			}
 
-                    // Initialise group if necessary
-                    if (!groups[option.group]) {
-                        var groupElement = generateElement('<optgroup />');
-                        groupElement.setAttribute('label', option.group);
+			let o = generateElement(templates.option);
 
-                        groups[option.group] = {
-                            Content: groupElement
-                        };
-                    }
+			o.setAttribute('value', option.value);
+			o.textContent = option.text;
 
-                    elem = groups[option.group].Content;
-                }
 
-                let o = generateElement(templates.option);
+			elem.append(o);
+		}
 
-                o.setAttribute('value', option.value);
-                o.textContent = option.text;
+		for (const [_, group] of Object.entries(groups)) {
+			input.append(group.Content);
+		}
 
+		// Safe to set a select's value as per a normal input
+		(input as HTMLInputElement).value = options.value.toString();
+		break;
 
+	case 'checkbox':
+		var checkboxValues = Array.isArray(options.value) ? options.value : [options.value];
+		inputOptions = options.inputOptions || [];
 
-                elem.append(o);
-            }
+		if (!inputOptions.length) {
+			throw new Error('prompt with "inputType" set to "checkbox" requires at least one option');
+		}
 
-            for (const [_, group] of Object.entries(groups)) {
-                input.append(group.Content);
-            }
+		// Checkboxes have to nest within a containing element, so they break the rules a bit and we end up re-assigning our 'input' element to this container instead
+		input = generateElement('<div class="bootbox-checkbox-list"></div>');
 
-            // Safe to set a select's value as per a normal input
-            (input as HTMLInputElement).value = options.value.toString();
-            break;
+		for (const [_, option] of Object.entries(inputOptions)) {
+			if (option.value === undefined || option.text === undefined) {
+				throw new Error('each option needs a "value" property and a "text" property');
+			}
 
-        case 'checkbox':
-            var checkboxValues = Array.isArray(options.value) ? options.value : [options.value];
-            inputOptions = options.inputOptions || [];
+			let checkbox = generateElement(templates.inputs[options.inputType]);
 
-            if (!inputOptions.length) {
-                throw new Error('prompt with "inputType" set to "checkbox" requires at least one option');
-            }
+			checkbox.querySelector<HTMLInputElement>('input')?.setAttribute('value', option.value);
+			checkbox.querySelector<HTMLLabelElement>('label')?.append(`\n${option.text}`);
 
-            // Checkboxes have to nest within a containing element, so they break the rules a bit and we end up re-assigning our 'input' element to this container instead
-            input = generateElement('<div class="bootbox-checkbox-list"></div>');
+			// We've ensured values is an array, so we can always iterate over it
+			for (const [_, value] of Object.entries(checkboxValues)) {
+				if (value === option.value) {
+					checkbox.querySelector<HTMLInputElement>('input')?.setAttribute('checked', 'true');
+				}
+			}
 
-            for (const [_, option] of Object.entries(inputOptions)) {
-                if (option.value === undefined || option.text === undefined) {
-                    throw new Error('each option needs a "value" property and a "text" property');
-                }
+			input.append(checkbox);
+		}
+		break;
 
-                let checkbox = generateElement(templates.inputs[options.inputType]);
+	case 'radio':
+		// Make sure that value is not an array (only a single radio can ever be checked)
+		if (options.value !== undefined && Array.isArray(options.value)) {
+			throw new Error(
+				'prompt with "inputType" set to "radio" requires a single, non-array value for "value"');
+		}
 
-                checkbox.querySelector<HTMLInputElement>('input')?.setAttribute('value', option.value);
-                checkbox.querySelector<HTMLLabelElement>('label')?.append(`\n${option.text}`);
+		inputOptions = options.inputOptions || [];
 
-                // We've ensured values is an array, so we can always iterate over it
-                for (const [_, value] of Object.entries(checkboxValues)) {
-                    if (value === option.value) {
-                        checkbox.querySelector<HTMLInputElement>('input')?.setAttribute('checked', 'true');
-                    }
-                }
+		if (!inputOptions.length) {
+			throw new Error('prompt with "inputType" set to "radio" requires at least one option');
+		}
 
-                input.append(checkbox);
-            }
-            break;
+		// Radiobuttons have to nest within a containing element, so they break the rules a bit and we end up re-assigning our 'input' element to this container instead
+		input = generateElement('<div class="bootbox-radiobutton-list"></div>');
 
-        case 'radio':
-            // Make sure that value is not an array (only a single radio can ever be checked)
-            if (options.value !== undefined && Array.isArray(options.value)) {
-                throw new Error(
-                    'prompt with "inputType" set to "radio" requires a single, non-array value for "value"');
-            }
+		// Radiobuttons should always have an initial checked input checked in a "group".
+		// If value is undefined or doesn't match an input option, select the first radiobutton
+		var checkFirstRadio = true;
 
-            inputOptions = options.inputOptions || [];
+		for (const [_, option] of Object.entries(inputOptions)) {
+			if (option.value === undefined || option.text === undefined) {
+				throw new Error('each option needs a "value" property and a "text" property');
+			}
 
-            if (!inputOptions.length) {
-                throw new Error('prompt with "inputType" set to "radio" requires at least one option');
-            }
+			let radio = generateElement(templates.inputs[options.inputType]);
 
-            // Radiobuttons have to nest within a containing element, so they break the rules a bit and we end up re-assigning our 'input' element to this container instead
-            input = generateElement('<div class="bootbox-radiobutton-list"></div>');
+			radio.querySelector<HTMLInputElement>('input')?.setAttribute('value', option.value);
+			radio.querySelector<HTMLLabelElement>('label')?.append(`\n${option.text}`);
 
-            // Radiobuttons should always have an initial checked input checked in a "group".
-            // If value is undefined or doesn't match an input option, select the first radiobutton
-            var checkFirstRadio = true;
+			if (options.value !== undefined) {
+				if (option.value === options.value) {
+					radio.querySelector<HTMLInputElement>('input')!.checked = true;
+					checkFirstRadio = false;
+				}
+			}
 
-            for (const [_, option] of Object.entries(inputOptions)) {
-                if (option.value === undefined || option.text === undefined) {
-                    throw new Error('each option needs a "value" property and a "text" property');
-                }
+			input.append(radio);
+		}
 
-                let radio = generateElement(templates.inputs[options.inputType]);
+		if (checkFirstRadio) {
+			input.querySelector<HTMLElement>('input[type="radio"]')?.setAttribute('checked', 'true');
+		}
+		break;
+	}
 
-                radio.querySelector<HTMLInputElement>('input')?.setAttribute('value', option.value);
-                radio.querySelector<HTMLLabelElement>('label')?.append(`\n${option.text}`);
+	// Now place it in our form
+	form.append(input);
 
-                if (options.value !== undefined) {
-                    if (option.value === options.value) {
-                        radio.querySelector<HTMLInputElement>('input')!.checked = true;
-                        checkFirstRadio = false;
-                    }
-                }
+	form.addEventListener('submit',
+		e => {
+			e.preventDefault();
+			// Fix for SammyJS (or similar JS routing library) hijacking the form post.
+			e.stopPropagation();
 
-                input.append(radio);
-            }
+			form.classList.remove('was-validated');
 
-            if (checkFirstRadio) {
-                input.querySelector<HTMLElement>('input[type="radio"]')?.setAttribute('checked', 'true');
-            }
-            break;
-    }
+			// @TODO can we actually click *the* button object instead?
+			// e.g. buttons.confirm.click() or similar
+			promptDialog.querySelector<HTMLElement>('.bootbox-accept')?.click();
+		});
 
-    // Now place it in our form
-    form.append(input);
+	if (options.message && options.message.trim() !== '') {
+		// Add the form to whatever content the user may have added.
+		let message = generateElement(templates.promptMessage).innerHTML = options.message;
+		form.prepend(message);
+		options.messageForm = form;
+	} else {
+		options.messageForm = form;
+	}
 
-    form.addEventListener('submit',
-        e => {
-	        e.preventDefault();
-	        // Fix for SammyJS (or similar JS routing library) hijacking the form post.
-	        e.stopPropagation();
+	// Generate the dialog
+	promptDialog = dialog(options);
 
-	        // @TODO can we actually click *the* button object instead?
-	        // e.g. buttons.confirm.click() or similar
-	        promptDialog.querySelector<HTMLElement>('.bootbox-accept')?.click();
-        });
+	// Clear the existing handler focusing the submit button...
+	promptDialog.removeEventListener('shown.bs.modal', focusPrimaryButton);
 
-    if (options.message && options.message.trim() !== '') {
-        // Add the form to whatever content the user may have added.
-        let message = generateElement(templates.promptMessage).innerHTML = options.message;
-        form.prepend(message);
-        options.messageForm = form;
-    } else {
-        options.messageForm = form;
-    }
+	// ...and replace it with one focusing our input, if possible
+	promptDialog.addEventListener('shown.bs.modal',
+		() => {
+			// Need the closure here since input isn't can object otherwise
+			input.focus();
+		});
 
-    // Generate the dialog
-    promptDialog = dialog(options);
+	const modal = new bootstrap.Modal(promptDialog);
 
-    // Clear the existing handler focusing the submit button...
-    promptDialog.removeEventListener('shown.bs.modal', focusPrimaryButton);
+	if (shouldShow === true) {
+		modal.show();
+	}
 
-    // ...and replace it with one focusing our input, if possible
-    promptDialog.addEventListener('shown.bs.modal',
-        () => {
-	        // Need the closure here since input isn't can object otherwise
-	        input.focus();
-        });
-
-    const modal = new bootstrap.Modal(promptDialog);
-
-    if (shouldShow === true) {
-        modal.show();
-    }
-
-    return promptDialog;
+	return promptDialog;
 };
 
 // INTERNAL FUNCTIONS
 // *************************************************************************************************************
 function extend(...args: any[]): any {
 	// Variables
-	const extended: Record<string, any> = {};
+	const extended: CustomProperties = {};
 	let deep = false;
 	let i = 0;
 	const length = args.length;
@@ -849,7 +886,7 @@ function extend(...args: any[]): any {
 	}
 
 	// Merge the object into the extended object
-	const merge = (obj: Record<string, any>): void => {
+	const merge = (obj: CustomProperties): void => {
 		for (const prop in obj) {
 			if (Object.prototype.hasOwnProperty.call(obj, prop)) {
 				// If deep merge and property is an object, merge properties
@@ -883,9 +920,9 @@ function extend(...args: any[]): any {
 //
 //    { message: "foo", callback: $.noop }
 //
-function mapArguments(args: any[], properties: string[]): Record<string, any> {
+function mapArguments(args: any[], properties: string[]): CustomProperties {
 	const argsLength = args.length;
-	let options: Record<string, any> = {};
+	let options: CustomProperties = {};
 
 	if (argsLength < 1 || argsLength > 2) {
 		throw new Error('Invalid argument length');
@@ -1156,16 +1193,16 @@ function minAndMaxAreValid(
 	if (minValid && maxValid) {
         if (typeof min === 'number' && typeof max === 'number' && max < min) {
 			throw new Error('"max" must be greater than or equal to "min".');    
-		} else {
+		}
+        else if (typeof min === 'string' && typeof max === 'string' && max < min) {
+			throw new Error('"max" must be greater than or equal to "min".');    
+		}  else {
 			result = true;
 		}
 	}
 
 	return result;
 }
-
-
-
 
 // helper Class
 function generateElement(html: string): HTMLElement {

@@ -28,6 +28,7 @@ export default interface Options {
     reusable?: boolean;
     value?: string | number | [] | null;
     inputType?: string;
+    errorMessage?: string;
     inputOptions?: InputOptions[];
     min?: string | number;
     max?: string | number;

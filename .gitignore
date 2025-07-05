@@ -14,3 +14,4 @@ dist/bootbox.zip
 package-lock.json
 /karma_html
 Folder.DotSettings.user
+*.code-workspace

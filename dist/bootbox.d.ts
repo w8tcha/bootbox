@@ -1,6 +1,6 @@
 import { Locale } from './interfaces/locale.ts';
 import { default as Options } from './interfaces/Options.ts';
-declare const VERSION = "6.0.4";
+declare const VERSION = "6.0.5";
 /**
  * Return specific locale
  * @param {string} [languageCode]
@@ -45,22 +45,22 @@ declare function initFn(_$: any): any;
 /**
  * The core dialog helper function, which can be used to create any custom Bootstrap modal.
  * @param {Object} options - An object used to configure the various properties which define a Bootbox dialog
- * @returns A jQuery object upon which Bootstrap's modal function has been called
+ * @returns an object upon which Bootstrap's modal function has been called
  */
 declare function dialog(options: Options): HTMLElement;
 /**
         * Helper function to simulate the native alert() behavior. **NOTE**: This is non-blocking, so any code that must happen after the alert is dismissed should be placed within the callback function for this alert.
-        * @returns  A jQuery object upon which Bootstrap's modal function has been called
+        * @returns  An object upon which Bootstrap's modal function has been called
         */
-declare function alert(): HTMLElement;
+declare function alert(...args: any[]): HTMLElement;
 /**
-         * Helper function to simulate the native confirm() behavior. **NOTE**: This is non-blocking, so any code that must happen after the confirm is dismissed should be placed within the callback function for this confirm.
-         * @returns A jQuery object upon which Bootstrap's modal function has been called
-         */
-declare function confirm(): HTMLElement;
+ * Helper function to simulate the native confirm() behavior. **NOTE**: This is non-blocking, so any code that must happen after the confirm is dismissed should be placed within the callback function for this confirm.
+* @returns an object upon which Bootstrap's modal function has been called
+*/
+declare function confirm(...args: any[]): HTMLElement;
 /**
  * Helper function to simulate the native prompt() behavior. **NOTE**: This is non-blocking, so any code that must happen after the prompt is dismissed should be placed within the callback function for this prompt.
- * @returns A jQuery object upon which Bootstrap's modal function has been called
+ * @returns an object upon which Bootstrap's modal function has been called
  */
-declare function prompt(): HTMLElement;
+declare function prompt(...args: any[]): HTMLElement;
 export { VERSION, getLocale, addLocale, removeLocale, setLocale, setDefaults, hideAll, dialog, alert, confirm, prompt, initFn as init };

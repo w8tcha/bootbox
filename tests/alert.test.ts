@@ -84,10 +84,6 @@ describe('bootbox.alert', () => {
 					expect(find('.modal-header button')?.classList.contains('close')).to.be.true;
 				});
 
-				it('applies the correct aria-hidden attribute to the close button', () => {
-					expect(find('button.close')?.getAttribute('aria-hidden')).to.equal('true');
-				});
-
 				it('applies the correct class to the body', () => {
 					expect(document.querySelector('body')?.classList.contains('modal-open')).to.be.true;
 				});

@@ -57,6 +57,8 @@ export default interface Options {
     value?: string | number | [] | null;
 	// Changes the type of input generated for the prompt dialog.
 	inputType?: string;
+	// Custom error message to report if prompt fails validation
+	errorMessage?: string;
     // If you specify select, checkbox, or radio as the input type, you must also supply an array of valid values in the format of
 	inputOptions?: InputOptions[];
 	min? : string | number; 

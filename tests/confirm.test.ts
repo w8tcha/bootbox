@@ -167,11 +167,13 @@ describe('bootbox.confirm',
 											.toContain('btn-primary');
 										expect(dialog?.querySelector<HTMLElement>('.btn:last-child')?.classList)
 											.toContain('bootbox-accept');
-									}); /*
-									it('shows the dialog', () => {
-									  var isVisible = !!(dialog.offsetWidth || dialog.offsetHeight || dialog.getClientRects().length);
-									  expect(isVisible).to.true;
-									});*/
+									});
+
+								it('shows the dialog',
+									() => {
+										var isVisible = bootstrap.Modal.getInstance(dialog)?._isShown;
+										expect(isVisible).to.true;
+									});
 							});
 
 					});
@@ -209,8 +211,8 @@ describe('bootbox.confirm',
 						});
 						it('adds the correct cancel button',
 							() => {
-								expect(button.textContent).to.equal('Custom cancel');
-								expect(button.classList).toContain('btn-danger');
+								expect(button?.textContent).to.equal('Custom cancel');
+								expect(button?.classList).toContain('btn-danger');
 							});
 					});
 
@@ -228,8 +230,8 @@ describe('bootbox.confirm',
 						});
 						it('adds the correct confirm button',
 							() => {
-								expect(button.textContent).to.equal('Custom confirm');
-								expect(button.classList).toContain('btn-warning');
+								expect(button?.textContent).to.equal('Custom confirm');
+								expect(button?.classList).toContain('btn-warning');
 							});
 					});
 

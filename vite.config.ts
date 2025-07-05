@@ -35,7 +35,6 @@ export default defineConfig({
 		globals: true,
 		include: [
 			'tests/**/*.test.ts'],
-			//'tests/bootbox.test.ts'],
 		forceRerunTriggers: ['./vite.config.ts']
 	}
 });
