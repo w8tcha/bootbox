@@ -26,9 +26,6 @@
     "import": "./dist/bootbox.js",
     "require": "./dist/bootbox.umd.cjs"
   },
-  "files": [
-    "dist/*.js"
-  ],
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
     "happy-dom": "^18.0.1",
