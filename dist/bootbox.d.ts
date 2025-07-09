@@ -1,6 +1,6 @@
 import { Locale } from './interfaces/locale.ts';
 import { default as Options } from './interfaces/Options.ts';
-declare const VERSION = "6.0.5";
+declare const VERSION: string;
 /**
  * Return specific locale
  * @param {string} [languageCode]

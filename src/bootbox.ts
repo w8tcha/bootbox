@@ -4,12 +4,11 @@ import Options from './interfaces/Options.ts';
 import Buttons, { Button } from './interfaces/button.ts';
 import { InputGroup } from './interfaces/inputGroup.ts';
 import Callback from './interfaces/callback.ts';
-import { DEFAULT_LOCALES, DEFAULT_OPTIONS, DEFAULT_TEMPLATES } from './defaults.ts';
+import { DEFAULT_LOCALES, DEFAULT_OPTIONS, DEFAULT_TEMPLATES, DEFAULT_VERSION } from './defaults.ts';
 import { dateIsValid, timeIsValid, trigger } from './lib/utils.ts';
 import { CustomProperties } from './types/customProperties.ts';
 
-const VERSION = '6.0.5';
-
+const VERSION = DEFAULT_VERSION;
 const locales = DEFAULT_LOCALES;
 const templates = DEFAULT_TEMPLATES;
 const defaults = DEFAULT_OPTIONS;

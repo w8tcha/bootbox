@@ -46,6 +46,8 @@ import vi from './locales/vi.ts';
 import zhCN from './locales/zh_CN.ts'; 
 import zhTW from './locales/zh_TW.ts';
 
+export const DEFAULT_VERSION : string = '6.0.6';
+
 export const DEFAULT_LOCALES: Translations = {
 	ar,
 	az,
