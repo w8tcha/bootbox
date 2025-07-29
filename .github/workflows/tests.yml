@@ -22,8 +22,12 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Build
+    - name: Install
       run: |
         npm install
+    - name: Build
+      run: |
         npm run build
-        npm run test
+    - name: Test
+      run: |
+       npm run test
