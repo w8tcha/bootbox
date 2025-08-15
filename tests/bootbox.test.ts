@@ -21,6 +21,7 @@ describe('Bootbox',
 							removed = vi.spyOn(dialog, 'remove');
 
 							e = (targetObject: any) => {
+								const CustomEvent = window.CustomEvent;
 								dialog?.dispatchEvent(new CustomEvent('hidden.bs.modal',
 									{ detail: { target: targetObject } }));
 							};
