@@ -402,7 +402,7 @@ describe('bootbox.confirm',
 						describe('when triggering the escape event',
 							() => {
 								beforeEach(() => {
-									const Event = window.Event;
+									const CustomEvent = window.CustomEvent;
 									dialog?.dispatchEvent(new CustomEvent('escape.close.bb'));
 								});
 								it('should invoke the callback',
