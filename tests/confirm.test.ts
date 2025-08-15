@@ -317,7 +317,8 @@ describe('bootbox.confirm',
 						describe('when triggering the escape event',
 							() => {
 								beforeEach(() => {
-									return dialog?.dispatchEvent(new Event('escape.close.bb'));
+									const Event = window.Event;
+								return dialog?.dispatchEvent(new Event('escape.close.bb'));
 								});
 								it('should invoke the callback',
 									() => {
@@ -401,6 +402,7 @@ describe('bootbox.confirm',
 						describe('when triggering the escape event',
 							() => {
 								beforeEach(() => {
+									const Event = window.Event;
 									dialog?.dispatchEvent(new CustomEvent('escape.close.bb'));
 								});
 								it('should invoke the callback',

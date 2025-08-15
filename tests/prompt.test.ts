@@ -1151,7 +1151,10 @@ describe('bootbox.prompt', () => {
                     });
                 });
                 describe('when submitting the form', () => {
-                    beforeEach(() => dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit')));
+                    beforeEach(() => {
+                        const Event = window.Event;
+                        dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit'))
+                    });
                     it('invokes the callback with the correct value', () => {
                         expect(callback).toHaveBeenCalledWith('');
                     });
@@ -1181,7 +1184,11 @@ describe('bootbox.prompt', () => {
                     });
                 });
                 describe('when submitting the form', () => {
-                    beforeEach(() => dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit')));
+                    beforeEach(() => 
+                        {
+                            const Event = window.Event;
+							dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit'))
+                        });
                     it('invokes the callback with the correct value', () => {
                         expect(callback).toHaveBeenCalledWith('Test input');
                     });
@@ -1209,7 +1216,10 @@ describe('bootbox.prompt', () => {
                 });
             });
             describe('when triggering the escape event', () => {
-                beforeEach(() => dialog?.dispatchEvent(new Event('escape.close.bb')));
+                beforeEach(() => {
+                    const Event = window.Event;
+					dialog?.dispatchEvent(new Event('escape.close.bb'))
+                });
                 it('should invoke the callback', () => {
                     expect(callback).toHaveBeenCalled();
                 });
@@ -1303,7 +1313,10 @@ describe('bootbox.prompt', () => {
                 });
             });
             describe('when triggering the escape event', () => {
-                beforeEach(() => dialog?.dispatchEvent(new Event('escape.close.bb')));
+                beforeEach(() => {
+                    const Event = window.Event;
+					dialog?.dispatchEvent(new Event('escape.close.bb'))
+                });
                 it('should invoke the callback', () => {
                     expect(callback).toHaveBeenCalled();
                 });
@@ -2124,7 +2137,10 @@ describe('bootbox.prompt', () => {
                     });
                 });
                 describe('when submitting the form', () => {
-                    beforeEach(() => dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit')));
+                    beforeEach(() => {
+                        const Event = window.Event;
+						dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit'))}
+                    );
                     it('invokes the callback with the correct value', () => {
                         expect(callback).toHaveBeenCalledWith('');
                     });
@@ -2183,7 +2199,10 @@ describe('bootbox.prompt', () => {
                     });
                 });
                 describe('when submitting the form', () => {
-                    beforeEach(() => dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit')));
+                    beforeEach(() => {
+                        const Event = window.Event;
+						dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit'))
+                    });
                     it('invokes the callback with the correct value', () => {
                         expect(callback).toHaveBeenCalledWith('john@smith.com');
                     });
