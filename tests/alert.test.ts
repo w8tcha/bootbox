@@ -232,6 +232,7 @@ describe('bootbox.alert', () => {
 					describe('when triggering the escape event',
 						() => {
 							beforeEach(() => {
+								// https://github.com/jsdom/jsdom/issues/3331
 								const Event = window.Event;
 								dialog?.dispatchEvent(new Event('escape.close.bb'));
 							});
@@ -304,6 +305,7 @@ describe('bootbox.alert', () => {
 					describe('when triggering the escape event',
 						() => {
 							beforeEach(() => {
+								// https://github.com/jsdom/jsdom/issues/3331
 								const Event = window.Event;
 								dialog?.dispatchEvent(new Event('escape.close.bb'));
 							});
@@ -386,6 +388,7 @@ describe('bootbox.alert', () => {
 					describe('when triggering the escape event',
 						() => {
 							beforeEach(() => {
+								// https://github.com/jsdom/jsdom/issues/3331
 								const Event = window.Event;
 								dialog?.dispatchEvent(new Event('escape.close.bb'));
 							});

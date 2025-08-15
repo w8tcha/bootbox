@@ -133,7 +133,8 @@ describe('bootbox.dialog', () => {
       });
       describe('when triggering the escape event', () => {
         beforeEach(() => {
-           const Event = window.Event;
+           // https://github.com/jsdom/jsdom/issues/3331
+					 const Event = window.Event;
            dialog?.dispatchEvent(new Event('escape.close.bb'));
         });
          it('should not hide the modal', () => {
@@ -182,7 +183,8 @@ describe('bootbox.dialog', () => {
       });
       describe('when triggering the escape event', () => {
         beforeEach(() => {
-           const Event = window.Event;
+           // https://github.com/jsdom/jsdom/issues/3331
+					const Event = window.Event;
 					 dialog?.dispatchEvent(new Event('escape.close.bb'));
         });
         it('should not invoke the callback', () => {
@@ -302,7 +304,6 @@ describe('bootbox.dialog', () => {
     beforeEach(() => {
        e = (keyCode: any) => {
 	       const keyUpEvent = new CustomEvent('keyup', {detail: { which: keyCode}});
-	       const Event = window.Event;
          dialog?.dispatchEvent(keyUpEvent);
        };
     });

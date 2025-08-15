@@ -21,6 +21,7 @@ describe('Bootbox',
 							removed = vi.spyOn(dialog, 'remove');
 
 							e = (targetObject: any) => {
+								// https://github.com/jsdom/jsdom/issues/3331
 								const CustomEvent = window.CustomEvent;
 								dialog?.dispatchEvent(new CustomEvent('hidden.bs.modal',
 									{ detail: { target: targetObject } }));
@@ -90,6 +91,7 @@ describe('Bootbox',
 							});
 
 							e = (target: any) => {
+								// https://github.com/jsdom/jsdom/issues/3331
 								const Event = window.Event;
 								dialog?.dispatchEvent(new Event('hidden.bs.modal',
 									{
@@ -256,7 +258,6 @@ describe('Bootbox',
 				beforeEach(() => {
 					e = target => {
 						const dismissEvent = new CustomEvent('click.dismiss.bs.modal', { detail: { target: target } });
-						const Event = window.Event;
 						dialog?.dispatchEvent(dismissEvent);
 					};
 				});
@@ -364,7 +365,6 @@ describe('Bootbox',
 
 							e = target => {
 								const hiddenEvent = new CustomEvent('hidden.bs.modal', { detail: { target: target } });
-								const Event = window.Event;
 								dialog?.dispatchEvent(hiddenEvent);
 							};
 						});
@@ -396,7 +396,8 @@ describe('Bootbox',
 
 							removed = vi.spyOn(dialog, 'remove').mockImplementation(() => {});
 
-							e = target => {
+							e = (target: any) => {
+								// https://github.com/jsdom/jsdom/issues/3331
 								const Event = window.Event;
 								dialog?.dispatchEvent(new Event('hidden.bs.modal',
 									{
@@ -433,7 +434,8 @@ describe('Bootbox',
 							removed = vi.spyOn(dialog, 'remove').mockImplementation(() => {});
 
 							e = (target: any) => {
-								const Event = window.Event;
+								// https://github.com/jsdom/jsdom/issues/3331
+						        const Event = window.Event;
 								dialog?.dispatchEvent(new Event('hidden.bs.modal',
 									{
 										target: target

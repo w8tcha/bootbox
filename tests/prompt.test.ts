@@ -1152,7 +1152,8 @@ describe('bootbox.prompt', () => {
                 });
                 describe('when submitting the form', () => {
                     beforeEach(() => {
-                        const Event = window.Event;
+                        // https://github.com/jsdom/jsdom/issues/3331
+						const Event = window.Event;
                         dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit'))
                     });
                     it('invokes the callback with the correct value', () => {
@@ -1186,7 +1187,8 @@ describe('bootbox.prompt', () => {
                 describe('when submitting the form', () => {
                     beforeEach(() => 
                         {
-                            const Event = window.Event;
+                            // https://github.com/jsdom/jsdom/issues/3331
+							const Event = window.Event;
 							dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit'))
                         });
                     it('invokes the callback with the correct value', () => {
@@ -1217,7 +1219,8 @@ describe('bootbox.prompt', () => {
             });
             describe('when triggering the escape event', () => {
                 beforeEach(() => {
-                    const Event = window.Event;
+                    // https://github.com/jsdom/jsdom/issues/3331
+					const Event = window.Event;
 					dialog?.dispatchEvent(new Event('escape.close.bb'))
                 });
                 it('should invoke the callback', () => {
@@ -1314,7 +1317,8 @@ describe('bootbox.prompt', () => {
             });
             describe('when triggering the escape event', () => {
                 beforeEach(() => {
-                    const Event = window.Event;
+                    // https://github.com/jsdom/jsdom/issues/3331
+					const Event = window.Event;
 					dialog?.dispatchEvent(new Event('escape.close.bb'))
                 });
                 it('should invoke the callback', () => {
@@ -2138,7 +2142,8 @@ describe('bootbox.prompt', () => {
                 });
                 describe('when submitting the form', () => {
                     beforeEach(() => {
-                        const Event = window.Event;
+                        // https://github.com/jsdom/jsdom/issues/3331
+						const Event = window.Event;
 						dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit'))}
                     );
                     it('invokes the callback with the correct value', () => {
@@ -2200,7 +2205,8 @@ describe('bootbox.prompt', () => {
                 });
                 describe('when submitting the form', () => {
                     beforeEach(() => {
-                        const Event = window.Event;
+                        // https://github.com/jsdom/jsdom/issues/3331
+						const Event = window.Event;
 						dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit'))
                     });
                     it('invokes the callback with the correct value', () => {
