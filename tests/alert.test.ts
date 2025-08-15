@@ -232,7 +232,8 @@ describe('bootbox.alert', () => {
 					describe('when triggering the escape event',
 						() => {
 							beforeEach(() => {
-								dialog?.dispatchEvent(new CustomEvent('escape.close.bb'));
+								const Event = window.Event;
+								dialog?.dispatchEvent(new Event('escape.close.bb'));
 							});
 
 							it('should hide the modal',
@@ -303,7 +304,8 @@ describe('bootbox.alert', () => {
 					describe('when triggering the escape event',
 						() => {
 							beforeEach(() => {
-								dialog?.dispatchEvent(new CustomEvent('escape.close.bb'));
+								const Event = window.Event;
+								dialog?.dispatchEvent(new Event('escape.close.bb'));
 							});
 
 							it('should invoke the callback',
@@ -384,7 +386,8 @@ describe('bootbox.alert', () => {
 					describe('when triggering the escape event',
 						() => {
 							beforeEach(() => {
-								dialog?.dispatchEvent(new CustomEvent('escape.close.bb'));
+								const Event = window.Event;
+								dialog?.dispatchEvent(new Event('escape.close.bb'));
 							});
 
 							it('should invoke the callback',
