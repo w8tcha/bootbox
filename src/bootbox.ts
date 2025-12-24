@@ -1,5 +1,5 @@
 ﻿import * as bootstrap from 'bootstrap';
-import { Locale } from './interfaces/locale.ts';
+import { Locale, Translations } from './interfaces/locale.ts';
 import Options from './interfaces/Options.ts';
 import Buttons, { Button } from './interfaces/button.ts';
 import { InputGroup } from './interfaces/inputGroup.ts';
@@ -23,6 +23,14 @@ const defaults = DEFAULT_OPTIONS;
  */
 function getLocale(languageCode: string): Locale {
 	return locales[languageCode];
+}
+
+/**
+   * Return all currently registered locales, or a specific locale if "name" is defined
+   * @returns {(Object|Object[])} An array of the available locale objects.
+   */
+function getAllLocales(): Translations {
+	return locales;
 }
 
 /**
@@ -1231,6 +1239,7 @@ function addEventListener(el: HTMLElement, eventName: string, eventHandler: (thi
 
 export {
 	VERSION,
+	getAllLocales,
 	getLocale,
 	addLocale,
 	removeLocale,

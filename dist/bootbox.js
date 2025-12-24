@@ -5,7 +5,7 @@
  * license: MIT
  * http://bootboxjs.com/
  */
-import * as v from "bootstrap";
+import * as y from "bootstrap";
 const T = {
   OK: "موافق",
   CANCEL: "الغاء",
@@ -273,36 +273,39 @@ function g(t, e) {
     t.dispatchEvent(o);
   }
 }
-const je = Ne, y = Ae, p = Le, O = ke;
+const je = Ne, C = Ae, p = Le, O = ke;
 function Be(t) {
-  return y[t];
+  return C[t];
 }
-function Pe(t, e) {
+function Pe() {
+  return C;
+}
+function He(t, e) {
   ["OK", "CANCEL", "CONFIRM"].forEach((o, a) => {
     if (!e[o])
       throw new Error(`Please supply a translation for "${o}"`);
-  }), y[t] = {
+  }), C[t] = {
     OK: e.OK,
     CANCEL: e.CANCEL,
     CONFIRM: e.CONFIRM
   };
 }
-function He(t) {
+function Ve(t) {
   if (t !== "en")
-    delete y[t];
+    delete C[t];
   else
     throw new Error('"en" is used as the default and fallback locale and cannot be removed.');
 }
-function Ve(t) {
+function De(t) {
   return t && (t = t.replace("-", "")), xe("locale", t);
 }
 function xe(...t) {
   let e = {};
   t.length === 2 ? e[t[0]] = t[1] : e = t[0], Object.assign(O, e);
 }
-function De() {
+function ze() {
   document.querySelectorAll(".bootbox").forEach((t) => {
-    const e = v.Modal.getInstance(t);
+    const e = y.Modal.getInstance(t);
     e && e.hide();
   });
 }
@@ -310,7 +313,7 @@ function Ke(t) {
   return Ke();
 }
 function L(t) {
-  if (v.Modal === void 0)
+  if (y.Modal === void 0)
     throw new Error(
       '"bootstrap.Modal" is not defined; please double check you have included the Bootstrap JavaScript library. See https://getbootstrap.com/docs/5.3/getting-started/introduction/ for more details.'
     );
@@ -433,7 +436,7 @@ function L(t) {
       (l.which === 27 || l.detail.which === 27) && g(e, "escape.close.bb");
     }
   ), typeof t.container == "object" ? t.container.append(e) : document.querySelector(t.container)?.append(e);
-  const C = new v.Modal(
+  const v = new y.Modal(
     e,
     {
       backdrop: t.backdrop,
@@ -441,9 +444,9 @@ function L(t) {
       //show: false
     }
   );
-  return t.show && (t.relatedTarget ? C.show(t.relatedTarget) : C.show()), e;
+  return t.show && (t.relatedTarget ? v.show(t.relatedTarget) : v.show()), e;
 }
-function ze(...t) {
+function _e(...t) {
   const e = k("alert", ["ok"], ["message", "callback"], t);
   if (e.callback && typeof e.callback != "function")
     throw new Error('alert requires the "callback" property to be a function when provided');
@@ -451,7 +454,7 @@ function ze(...t) {
     return typeof e.callback == "function" ? e.callback.call(this) : !0;
   }, L(e);
 }
-function _e(...t) {
+function $e(...t) {
   let e;
   if (e = k("confirm", ["cancel", "confirm"], ["message", "callback"], t), typeof e.callback != "function")
     throw new Error("confirm requires a callback");
@@ -462,7 +465,7 @@ function _e(...t) {
     return e.callback?.call(this, !0);
   }, e.buttons.cancel = o, e.buttons.confirm = a, L(e);
 }
-function $e(...t) {
+function Ue(...t) {
   let e, o, a, r, n, i;
   a = b(p.form), e = k("prompt", ["cancel", "confirm"], ["title", "callback"], t), e.value || (e.value = O.value), e.inputType || (e.inputType = O.inputType), n = e.show === void 0 ? O.show : e.show, e.show = !1;
   var u = e.buttons.cancel;
@@ -489,10 +492,10 @@ function $e(...t) {
     throw new Error("prompt requires a title");
   if (typeof e.callback != "function")
     throw new Error("prompt requires a callback");
-  var C = p.inputs;
-  if (!C[e.inputType])
+  var v = p.inputs;
+  if (!v[e.inputType])
     throw new Error("Invalid prompt type");
-  switch (r = b(C[e.inputType]), e.inputType !== "textarea" && r.addEventListener("keydown", function(c) {
+  switch (r = b(v[e.inputType]), e.inputType !== "textarea" && r.addEventListener("keydown", function(c) {
     if (c.key === "Enter") {
       c.preventDefault();
       var s = o.querySelector(".bootbox-accept");
@@ -598,7 +601,7 @@ ${s.text}`), e.value !== void 0 && s.value === e.value && (f.querySelector("inpu
       r.focus();
     }
   );
-  const R = new v.Modal(o);
+  const R = new y.Modal(o);
   return n === !0 && R.show(), o;
 }
 function M(...t) {
@@ -686,8 +689,8 @@ function N(t, e) {
   };
 }
 function I(t, e) {
-  const o = y[e];
-  return o ? o[t] : y.en[t];
+  const o = C[e];
+  return o ? o[t] : C.en[t];
 }
 function Re(t) {
   let e, o;
@@ -718,7 +721,7 @@ function S(t) {
   return Object.keys(t).length;
 }
 function A(t, e, o) {
-  t.stopPropagation(), t.preventDefault(), !(typeof o == "function" && o.call(e, t) === !1) && e && v.Modal.getInstance(e)?.hide();
+  t.stopPropagation(), t.preventDefault(), !(typeof o == "function" && o.call(e, t) === !1) && e && y.Modal.getInstance(e)?.hide();
 }
 function qe(t, e, o) {
   let a = !1, r = !0, n = !0;
@@ -765,16 +768,17 @@ function E(t, e, o, a) {
 }
 export {
   je as VERSION,
-  Pe as addLocale,
-  ze as alert,
-  _e as confirm,
+  He as addLocale,
+  _e as alert,
+  $e as confirm,
   L as dialog,
+  Pe as getAllLocales,
   Be as getLocale,
-  De as hideAll,
+  ze as hideAll,
   Ke as init,
-  $e as prompt,
-  He as removeLocale,
+  Ue as prompt,
+  Ve as removeLocale,
   xe as setDefaults,
-  Ve as setLocale
+  De as setLocale
 };
 //# sourceMappingURL=bootbox.js.map

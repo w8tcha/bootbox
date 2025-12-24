@@ -1,4 +1,4 @@
-import { Locale } from './interfaces/locale.ts';
+import { Locale, Translations } from './interfaces/locale.ts';
 import { default as Options } from './interfaces/Options.ts';
 declare const VERSION: string;
 /**
@@ -7,6 +7,11 @@ declare const VERSION: string;
  * @returns {(Locale)} a single locale object.
  */
 declare function getLocale(languageCode: string): Locale;
+/**
+   * Return all currently registered locales, or a specific locale if "name" is defined
+   * @returns {(Object|Object[])} An array of the available locale objects.
+   */
+declare function getAllLocales(): Translations;
 /**
          * Register localized strings for the OK, CONFIRM, and CANCEL buttons
          * @param {string} name - The key used to identify the new locale in the locales array
@@ -63,4 +68,4 @@ declare function confirm(...args: any[]): HTMLElement;
  * @returns an object upon which Bootstrap's modal function has been called
  */
 declare function prompt(...args: any[]): HTMLElement;
-export { VERSION, getLocale, addLocale, removeLocale, setLocale, setDefaults, hideAll, dialog, alert, confirm, prompt, initFn as init };
+export { VERSION, getAllLocales, getLocale, addLocale, removeLocale, setLocale, setDefaults, hideAll, dialog, alert, confirm, prompt, initFn as init };
