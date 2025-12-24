@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.1.0",
-    "@w8tcha/bootbox": "github:w8tcha/bootbox",
+    "@w8tcha/bootbox": "^6.0.7",
     "anchor-js": "^5.0.0",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.3.8",
