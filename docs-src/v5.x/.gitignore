@@ -1,6 +1,0 @@
-*.swo
-*.swp
-node_modules
-tests
-.vs
-.vscode
