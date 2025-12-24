@@ -86,7 +86,7 @@ describe('bootbox.confirm',
 												message: 'Are you sure?'
 											};
 
-											dialog = bootbox.confirm(options);
+											dialog = bootbox.confirm(options)._element;
 
 										});
 
@@ -139,7 +139,7 @@ describe('bootbox.confirm',
 									dialog = bootbox.confirm('Are you sure?',
 										() => {
 											return true;
-										});
+										})._element;
 								});
 								it('creates a dialog object',
 									() => {
@@ -206,7 +206,7 @@ describe('bootbox.confirm',
 									className: 'btn-danger',
 								}
 							};
-							dialog = bootbox.confirm(options);
+							dialog = bootbox.confirm(options)._element;
 							return button = dialog.querySelector('.btn:first-child');
 						});
 						it('adds the correct cancel button',
@@ -225,7 +225,7 @@ describe('bootbox.confirm',
 									className: 'btn-warning'
 								}
 							};
-							var dialog = bootbox.confirm(options);
+							var dialog = bootbox.confirm(options)._element;
 							button = dialog.querySelector('.btn:first-child');
 						});
 						it('adds the correct confirm button',
@@ -262,7 +262,7 @@ describe('bootbox.confirm',
 							dialog = bootbox.confirm({
 								message: 'Are you sure?',
 								callback: callback
-							});
+							})._element;
 
 							const modalInstance = bootstrap.Modal.getInstance(dialog);
 							hidden = vi.spyOn(modalInstance, 'hide');
@@ -347,7 +347,7 @@ describe('bootbox.confirm',
 							dialog = bootbox.confirm({
 								message: 'Are you sure?',
 								callback: callback
-							});
+							})._element;
 
 							const modalInstance = bootstrap.Modal.getInstance(dialog);
 

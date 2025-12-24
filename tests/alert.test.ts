@@ -42,7 +42,7 @@ describe('bootbox.alert', () => {
 	      
 			describe('where the argument is a string', () => {
 				beforeEach(() => {
-					dialog = bootbox.alert('Hello world!');
+					dialog = bootbox.alert('Hello world!')._element;
 				});
 
 				afterEach((event) => {
@@ -106,7 +106,7 @@ describe('bootbox.alert', () => {
 			describe('where the second argument is a function', () => {
 				beforeEach(() => {
 					create = () => {
-						dialog = bootbox.alert('Hello world!', () => {});
+						dialog = bootbox.alert('Hello world!', () => {})._element;
 					};
 				});
 
@@ -138,7 +138,7 @@ describe('bootbox.alert', () => {
 			};
 
 			create = function() {
-				dialog = bootbox.alert(options);
+				dialog = bootbox.alert(options)._element;
 			};
 		});
 
@@ -199,9 +199,9 @@ describe('bootbox.alert', () => {
 					beforeEach(() => {
 						dialog = bootbox.alert({
 							message: 'Hello!'
-						});
+						})._element;
 
-						const modalInstance = bootstrap.Modal.getInstance(dialog);
+						const modalInstance = bootstrap.Modal.getInstance(dialog)!;
 						hidden = vi.spyOn(modalInstance, 'hide');
 					});
 
@@ -252,7 +252,7 @@ describe('bootbox.alert', () => {
 						dialog = bootbox.alert({
 							message: 'Hello!',
 							callback: callback
-						});
+						})._element;
 
 						const modalInstance = bootstrap.Modal.getInstance(dialog);
 						hidden = vi.spyOn(modalInstance, 'hide');
@@ -335,9 +335,9 @@ describe('bootbox.alert', () => {
 						dialog = bootbox.alert({
 							message: 'Hello!',
 							callback: callback
-						});
+						})._element;
 
-						const modalInstance = bootstrap.Modal.getInstance(dialog);
+						const modalInstance = bootstrap.Modal.getInstance(dialog)!;
 						hidden = vi.spyOn(modalInstance, 'hide');
 					});
 

@@ -16,7 +16,7 @@ describe('Bootbox',
 				describe('hidden.bs.modal',
 					() => {
 						beforeEach(() => {
-							dialog = bootbox.alert('hi');
+							dialog = bootbox.alert('hi')._element;
 
 							removed = vi.spyOn(dialog, 'remove');
 
@@ -55,7 +55,7 @@ describe('Bootbox',
 							dialog = bootbox.alert({
 								message: 'hi',
 								onHide: callback
-							});
+							})._element;
 
 							e = (targetObject: any) => {
 								dialog?.dispatchEvent(new CustomEvent('hide.bs.modal',
@@ -88,7 +88,7 @@ describe('Bootbox',
 							dialog = bootbox.alert({
 								message: 'hi',
 								onHidden: callback
-							});
+							})._element;
 
 							e = (target: any) => {
 								// https://github.com/jsdom/jsdom/issues/3331
@@ -123,7 +123,7 @@ describe('Bootbox',
 							dialog = bootbox.alert({
 								message: 'hi',
 								onShow: callback
-							});
+							})._element;
 						});
 
 						describe('when triggered with the correct target',
@@ -200,8 +200,8 @@ describe('Bootbox',
 										});
 									bootbox.setLocale('xy');
 
-									var d1 = bootbox.alert('foo');
-									var d2 = bootbox.confirm('foo', () => { return true; });
+									var d1 = bootbox.alert('foo')._element;
+									var d2 = bootbox.confirm('foo', () => { return true; })._element;
 									labels = {
 										ok: d1.querySelector<HTMLElement>('.btn:first-child')?.textContent,
 										cancel: d2.querySelector<HTMLElement>('.btn:first-child')?.textContent,
@@ -229,8 +229,8 @@ describe('Bootbox',
 						beforeEach(() => {
 							bootbox.removeLocale('xy');
 
-							var d1 = bootbox.alert('foo');
-							var d2 = bootbox.confirm('foo', () => { return true; });
+							var d1 = bootbox.alert('foo')._element;
+							var d2 = bootbox.confirm('foo', () => { return true; })._element;
 							labels = {
 								ok: d1.querySelector<HTMLElement>('.btn:first-child')?.textContent,
 								cancel: d2.querySelector<HTMLElement>('.btn:first-child')?.textContent,
@@ -266,7 +266,7 @@ describe('Bootbox',
 					() => {
 						beforeEach(() => {
 							callback = vi.fn();
-							dialog = bootbox.alert('hi', callback);
+							dialog = bootbox.alert('hi', callback)._element;
 						});
 
 						describe('When triggering the backdrop click dismiss event',
@@ -290,7 +290,7 @@ describe('Bootbox',
 								message: 'hi',
 								callback: callback,
 								backdrop: false
-							});
+							})._element;
 						});
 
 						describe('When triggering the backdrop click dismiss event',
@@ -329,7 +329,7 @@ describe('Bootbox',
 								message: 'hi',
 								callback: callback,
 								backdrop: true
-							});
+							})._element;
 						});
 
 						describe('When triggering the backdrop click dismiss event',
@@ -359,7 +359,7 @@ describe('Bootbox',
 				describe('hidden.bs.modal',
 					() => {
 						beforeEach(() => {
-							dialog = bootbox.alert({ message: 'hi', reusable: true });
+							dialog = bootbox.alert({ message: 'hi', reusable: true })._element;
 
 							removed = vi.spyOn(dialog, 'remove').mockImplementation(() => {});
 
@@ -392,7 +392,7 @@ describe('Bootbox',
 				describe('hidden.bs.modal',
 					() => {
 						beforeEach(() => {
-							dialog = bootbox.alert({ message: 'hi', reusable: false });
+							dialog = bootbox.alert({ message: 'hi', reusable: false })._element;
 
 							removed = vi.spyOn(dialog, 'remove').mockImplementation(() => {});
 
@@ -429,7 +429,7 @@ describe('Bootbox',
 				describe('hidden.bs.modal',
 					() => {
 						beforeEach(() => {
-							dialog = bootbox.alert({ message: 'hi' });
+							dialog = bootbox.alert({ message: 'hi' })._element;
 
 							removed = vi.spyOn(dialog, 'remove').mockImplementation(() => {});
 

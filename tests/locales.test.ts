@@ -10,8 +10,8 @@ describe('bootbox locales',
 		beforeEach(() => {
 			return setLocale = (locale: string) => {
 				bootbox.setLocale(locale);
-				var alert = bootbox.alert('foo');
-				var confirm = bootbox.confirm('foo', () => { return true; });
+				var alert = bootbox.alert('foo')._element;
+				var confirm = bootbox.confirm('foo', () => { return true; })._element;
 
 				return labels = {
 					ok: alert.querySelector<HTMLElement>('.btn:first-child')?.innerHTML,

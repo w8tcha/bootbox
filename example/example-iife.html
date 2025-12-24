@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>My page</title>
+
+            <!-- CSS dependencies -->
+            <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+        </head>
+        <body>
+
+            <p>Content here. <a class="show-alert" href="#">Alert!</a></p>
+
+            <!-- Bootstrap dependency -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+            <!-- bootbox code -->
+            <script src="../dist/bootbox.iife.js"></script>
+            <script>
+                document.addEventListener('click', function (e) {
+                    if (e.target.closest('.show-alert')) {
+                        var alert = bootbox.alert('Hello world!', function () {
+                            console.log('Alert Callback');
+                        });
+                    }
+                });
+            </script>
+        </body>
+        </html>

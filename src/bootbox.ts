@@ -407,7 +407,7 @@ function dialog (options: Options) {
         }
     }
 
-    return dialog;
+    return { _element: dialog, _modal: modal, _options: options  };
 };
 
 /**
@@ -856,7 +856,8 @@ function prompt(...args: any[]) {
 	}
 
 	// Generate the dialog
-	promptDialog = dialog(options);
+	const _dialog = dialog(options);
+	promptDialog = _dialog._element;
 
 	// Clear the existing handler focusing the submit button...
 	promptDialog.removeEventListener('shown.bs.modal', focusPrimaryButton);
@@ -868,7 +869,8 @@ function prompt(...args: any[]) {
 			input.focus();
 		});
 
-	const modal = new bootstrap.Modal(promptDialog);
+	//const modal = new bootstrap.Modal(promptDialog);
+	const modal = _dialog._modal;
 
 	if (shouldShow === true) {
 		modal.show();

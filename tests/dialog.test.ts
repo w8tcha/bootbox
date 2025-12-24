@@ -74,7 +74,7 @@ describe('bootbox.dialog', () => {
     beforeEach(() => {
        dialog = bootbox.dialog({
         message: 'test'
-      });
+      })._element;
     });
     it('adds the bootbox class to the dialog', () => {
        expect(dialog?.classList.contains('bootbox')).to.be.true;
@@ -107,7 +107,7 @@ describe('bootbox.dialog', () => {
         buttons: {
           one: button
         }
-      });
+      })._element;
     };
     });
     describe('when the button has no callback', () => {
@@ -226,7 +226,7 @@ describe('bootbox.dialog', () => {
 	         dialog = bootbox.dialog({
 		         message: 'test',
 		         buttons: buttons
-	         });
+	         })._element;
          };
       });
       describe('when its value is an object', () => {
@@ -277,7 +277,7 @@ describe('bootbox.dialog', () => {
       dialog = bootbox.dialog({
         title: 'My Title',
         message: 'test'
-      });
+      })._element;
     });
     it('has a header', () => {
        expect(exists('.modal-header')).to.be.not.null;
@@ -294,7 +294,7 @@ describe('bootbox.dialog', () => {
        dialog = bootbox.dialog({
         message: 'No backdrop in sight',
         closeButton: false
-      });
+      })._element;
     });
      it('does not have a close button inside the body', () => {
        expect(exists('.modal-body .close')).not.to.be.ok;
@@ -313,8 +313,8 @@ describe('bootbox.dialog', () => {
         dialog = bootbox.dialog({
           message: 'Are you sure?',
           onEscape: callback
-        });
-        const modalInstance = bootstrap.Modal.getInstance(dialog);
+        })._element;
+        const modalInstance = bootstrap.Modal.getInstance(dialog)!;
                 
          hidden = vi.spyOn(modalInstance, 'hide');
       });
@@ -349,7 +349,7 @@ describe('bootbox.dialog', () => {
         dialog = bootbox.dialog({
           message: 'Are you sure?',
           onEscape: callback
-        });
+        })._element;
         const modalInstance = bootstrap.Modal.getInstance(dialog);
                 
         hidden = vi.spyOn(modalInstance, 'hide');
@@ -390,7 +390,7 @@ describe('bootbox.dialog', () => {
          dialog = bootbox.dialog({
           message: 'test',
           size: 'large'
-        });
+        })._element;
       });
        it('adds the large class to the innerDialog', () => {
          expect(dialog?.querySelector<HTMLElement>(".modal-dialog")?.classList).toContain('modal-lg');
@@ -401,7 +401,7 @@ describe('bootbox.dialog', () => {
          dialog = bootbox.dialog({
           message: 'test',
           size: 'small'
-        });
+        })._element;
       });
        it('adds the large class to the innerDialog', () => {
          expect(dialog?.querySelector<HTMLElement>(".modal-dialog")?.classList).toContain('modal-sm');

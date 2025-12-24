@@ -18,7 +18,7 @@ describe('bootbox.setDefaults',
 							});
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('does not add the fade class to the dialog',
@@ -53,7 +53,7 @@ describe('bootbox.setDefaults',
 							});
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('adds the fade class to the dialog',
@@ -74,7 +74,7 @@ describe('bootbox.setDefaults',
 
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('adds the extra class to the outer dialog',
@@ -96,7 +96,7 @@ describe('bootbox.setDefaults',
 
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('adds the extra-large class to the innerDialog',
@@ -114,7 +114,7 @@ describe('bootbox.setDefaults',
 
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('adds the extra-large class to the innerDialog',
@@ -133,7 +133,7 @@ describe('bootbox.setDefaults',
 
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('adds the extra-large class to the innerDialog',
@@ -151,7 +151,7 @@ describe('bootbox.setDefaults',
 
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('adds the extra-large class to the innerDialog',
@@ -170,7 +170,7 @@ describe('bootbox.setDefaults',
 
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('adds the large class to the innerDialog',
@@ -188,7 +188,7 @@ describe('bootbox.setDefaults',
 
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('adds the large class to the innerDialog',
@@ -207,7 +207,7 @@ describe('bootbox.setDefaults',
 
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('adds the small class to the innerDialog',
@@ -225,7 +225,7 @@ describe('bootbox.setDefaults',
 
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('adds the small class to the innerDialog',
@@ -247,7 +247,7 @@ describe('bootbox.setDefaults',
 
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('adds the modal-dialog-centered class to the innerDialog',
@@ -269,7 +269,7 @@ describe('bootbox.setDefaults',
 
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('adds the modal-dialog-scrollable class to the innerDialog',
@@ -286,7 +286,7 @@ describe('bootbox.setDefaults',
 					bootbox.setDefaults('className', 'my-class');
 					dialog = bootbox.dialog({
 						message: 'test'
-					});
+					})._element;
 				});
 
 				it('applies the arguments as a key/value pair',
@@ -303,7 +303,7 @@ describe('bootbox.setDefaults',
 						beforeEach(() => {
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('defaults to the body element',
@@ -321,7 +321,7 @@ describe('bootbox.setDefaults',
 
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('sets the correct parent element',
@@ -344,7 +344,7 @@ describe('bootbox.setDefaults',
 
 							dialog = bootbox.dialog({
 								message: 'test'
-							});
+							})._element;
 						});
 
 						it('sets the correct parent element',

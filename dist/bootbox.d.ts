@@ -1,5 +1,6 @@
 import { Locale, Translations } from './interfaces/locale.ts';
 import { default as Options } from './interfaces/Options.ts';
+import * as bootstrap from 'bootstrap';
 declare const VERSION: string;
 /**
  * Return specific locale
@@ -52,17 +53,29 @@ declare function initFn(_$: any): any;
  * @param {Object} options - An object used to configure the various properties which define a Bootbox dialog
  * @returns an object upon which Bootstrap's modal function has been called
  */
-declare function dialog(options: Options): HTMLElement;
+declare function dialog(options: Options): {
+    _element: HTMLElement;
+    _modal: bootstrap.Modal;
+    _options: Options;
+};
 /**
         * Helper function to simulate the native alert() behavior. **NOTE**: This is non-blocking, so any code that must happen after the alert is dismissed should be placed within the callback function for this alert.
         * @returns  An object upon which Bootstrap's modal function has been called
         */
-declare function alert(...args: any[]): HTMLElement;
+declare function alert(...args: any[]): {
+    _element: HTMLElement;
+    _modal: bootstrap.Modal;
+    _options: Options;
+};
 /**
  * Helper function to simulate the native confirm() behavior. **NOTE**: This is non-blocking, so any code that must happen after the confirm is dismissed should be placed within the callback function for this confirm.
 * @returns an object upon which Bootstrap's modal function has been called
 */
-declare function confirm(...args: any[]): HTMLElement;
+declare function confirm(...args: any[]): {
+    _element: HTMLElement;
+    _modal: bootstrap.Modal;
+    _options: Options;
+};
 /**
  * Helper function to simulate the native prompt() behavior. **NOTE**: This is non-blocking, so any code that must happen after the prompt is dismissed should be placed within the callback function for this prompt.
  * @returns an object upon which Bootstrap's modal function has been called
