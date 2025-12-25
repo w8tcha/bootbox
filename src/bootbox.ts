@@ -869,14 +869,13 @@ function prompt(...args: any[]) {
 			input.focus();
 		});
 
-	//const modal = new bootstrap.Modal(promptDialog);
 	const modal = _dialog._modal;
 
 	if (shouldShow === true) {
 		modal.show();
 	}
 
-	return promptDialog;
+	return _dialog;
 };
 
 // INTERNAL FUNCTIONS

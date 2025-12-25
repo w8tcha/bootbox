@@ -34,7 +34,7 @@ describe('bootbox.prompt', () => {
             describe('where the argument is an object', () => {
                 beforeEach(() => {
                     options = {};
-                    create = (_this => () => dialog = bootbox.prompt(options))(this);
+                    create = (_this => () => dialog = bootbox.prompt(options)._element)(this);
                 });
 
                 describe('with a title property', () => {
@@ -75,7 +75,7 @@ describe('bootbox.prompt', () => {
                         };
 
                         create = () => {
-                            dialog = bootbox.prompt(options);
+                            dialog = bootbox.prompt(options)._element;
                         };
                     });
 
@@ -107,7 +107,7 @@ describe('bootbox.prompt', () => {
         describe('with two arguments', () => {
             describe('where the second argument is not a function', () => {
                 beforeEach(() => {
-                    create = (_this => () => dialog = bootbox.prompt('What is your name?', 'callback here'))(this);
+                    create = (_this => () => dialog = bootbox.prompt('What is your name?', 'callback here')._element)(this);
                 });
                 it('throws an error requiring a callback', () => {
                     expect(() => bootbox.prompt('What is your name?')).toThrowError('prompt requires a callback');
@@ -118,7 +118,7 @@ describe('bootbox.prompt', () => {
                 beforeEach(() => {
                     create = (_this => () => dialog = bootbox.prompt('What is your name?', () => {
                         return true;
-                    }))(this);
+                    })._element)(this);
                 });
 
                 it('does not throw an error', () => {
@@ -167,7 +167,7 @@ describe('bootbox.prompt', () => {
                     return true;
                 }
             };
-            create = (_this => () => dialog = bootbox.prompt(options))(this);
+            create = (_this => () => dialog = bootbox.prompt(options)._element)(this);
         });
 
         // centerVertical option set to true
@@ -1124,11 +1124,14 @@ describe('bootbox.prompt', () => {
         describe('with a simple callback', () => {
             beforeEach(() => {
                 callback = vi.fn();
-                dialog = bootbox.prompt({
+                const _dialog = bootbox.prompt({
                     title: 'What is your name?',
                     callback: callback
                 });
-                const modalInstance = bootstrap.Modal.getInstance(dialog);
+
+                dialog = _dialog._element;
+
+                const modalInstance = _dialog._modal;
                 hidden = vi.spyOn(modalInstance, 'hide');
             });
             describe('when entering no value in the text input', () => {
@@ -1257,11 +1260,14 @@ describe('bootbox.prompt', () => {
         describe('with a callback which returns false', () => {
             beforeEach(() => {
                 callback = vi.fn().mockReturnValue(false);
-                dialog = bootbox.prompt({
+                const _dialog = bootbox.prompt({
                     title: 'What is your name?',
                     callback: callback
                 });
-                const modalInstance = bootstrap.Modal.getInstance(dialog);
+
+                dialog = _dialog._element;
+
+                const modalInstance = _dialog._modal;
 
                 hidden = vi.spyOn(modalInstance, 'hide');
             });
@@ -1355,12 +1361,14 @@ describe('bootbox.prompt', () => {
         describe('with a default value', () => {
             beforeEach(() => {
                 callback = vi.fn();
-                dialog = bootbox.prompt({
+                const _dialog = bootbox.prompt({
                     title: 'What is your name?',
                     value: 'Bob',
                     callback: callback
                 });
-                const modalInstance = bootstrap.Modal.getInstance(dialog);
+
+                dialog = _dialog._element;
+                const modalInstance = _dialog._modal;
                 hidden = vi.spyOn(modalInstance, 'hide');
             });
             it('populates the input with the default value', () => {
@@ -1431,7 +1439,7 @@ describe('bootbox.prompt', () => {
                     callback() {
                         return true;
                     }
-                });
+                })._element;
             });
             it('populates the input with the placeholder attribute', () => {
                 expect(dialog?.querySelector('.bootbox-input')?.getAttribute('placeholder')).to.equal('e.g. Bob Smith');
@@ -1442,11 +1450,14 @@ describe('bootbox.prompt', () => {
         describe('with required: true and default input type', () => {
             beforeEach(() => {
                 callback = vi.fn();
-                dialog = bootbox.prompt({
+                const _dialog = bootbox.prompt({
                     title: 'What is your name?',
                     required: true,
                     callback: callback
                 });
+
+                dialog = _dialog._element;
+
                 //const modalInstance = bootstrap.Modal.getInstance(dialog);
                 //return hidden = vi.spyOn(modalInstance, 'modal');
             });
@@ -1482,7 +1493,7 @@ describe('bootbox.prompt', () => {
             });
             describe('when entering a value in the text input', () => {
                 beforeEach(() => {
-                    return dialog!.querySelector<HTMLInputElement>('.bootbox-input')!.value = 'Alice';
+                    return dialog.querySelector<HTMLInputElement>('.bootbox-input')!.value = 'Alice';
                 });
                 describe('when dismissing the dialog by clicking OK', () => {
                     beforeEach(() => {
@@ -1519,12 +1530,14 @@ describe('bootbox.prompt', () => {
         describe('with required: true and `text` input type', () => {
             beforeEach(() => {
                 callback = vi.fn();
-                dialog = bootbox.prompt({
+                const _dialog = bootbox.prompt({
                     title: 'What is your name?',
                     required: true,
                     inputType: 'text',
                     callback: callback
                 });
+
+                dialog = _dialog._element;
 
                 //const modalInstance = bootstrap.Modal.getInstance(dialog);
                 //return hidden = vi.spyOn(modalInstance, 'modal');
@@ -1598,12 +1611,13 @@ describe('bootbox.prompt', () => {
         describe('with required: true and `password` input type', () => {
             beforeEach(() => {
                 callback = vi.fn();
-                dialog = bootbox.prompt({
+                const _dialog = bootbox.prompt({
                     title: 'What is your password?',
                     required: true,
                     inputType: 'password',
                     callback: callback
                 });
+                dialog = _dialog._element;
                 //const modalInstance = bootstrap.Modal.getInstance(dialog);
                 //return hidden = vi.spyOn(modalInstance, 'modal');
             });
@@ -1676,12 +1690,13 @@ describe('bootbox.prompt', () => {
         describe('with required: true and `number` input type', () => {
             beforeEach(() => {
                 callback = vi.fn();
-                dialog = bootbox.prompt({
+                const _dialog = bootbox.prompt({
                     title: 'What is your favorite number?',
                     required: true,
                     inputType: 'number',
                     callback: callback
                 });
+                dialog = _dialog._element;
                 // const modalInstance = bootstrap.Modal.getInstance(dialog);
                 //return hidden = vi.spyOn(modalInstance, 'modal');
             });
@@ -1759,7 +1774,7 @@ describe('bootbox.prompt', () => {
                     required: true,
                     inputType: 'date',
                     callback: callback
-                });
+                })._element;
             });
             it('populates the input with the required property', () => {
                 return expect(dialog?.querySelector<HTMLInputElement>('.bootbox-input')?.required).to.equal(true);
@@ -1835,7 +1850,7 @@ describe('bootbox.prompt', () => {
                     required: true,
                     inputType: 'time',
                     callback: callback
-                });
+                })._element;
             });
             it('populates the input with the required property', () => {
                 return expect(dialog?.querySelector<HTMLInputElement>('.bootbox-input')?.required).to.equal(true);
@@ -1911,7 +1926,7 @@ describe('bootbox.prompt', () => {
                     required: true,
                     inputType: 'textarea',
                     callback: callback
-                });
+                })._element;
             });
             it('populates the input with the required property', () => {
                 return expect(dialog?.querySelector<HTMLInputElement>('.bootbox-input')?.required).to.equal(true);
@@ -1983,7 +1998,7 @@ describe('bootbox.prompt', () => {
             describe('without a default value', () => {
                 beforeEach(() => {
                     callback = vi.fn();
-                    dialog = bootbox.prompt({
+                    const _dialog = bootbox.prompt({
                         title: 'What is your IDE?',
                         callback: callback,
                         inputType: 'select',
@@ -2006,7 +2021,9 @@ describe('bootbox.prompt', () => {
                             }
                         ]
                     });
-                    const modalInstance = bootstrap.Modal.getInstance(dialog);
+
+                dialog = _dialog._element;
+                    const modalInstance = _dialog._modal;
 
                     hidden = vi.spyOn(modalInstance, 'hide');
                 });
@@ -2041,7 +2058,7 @@ describe('bootbox.prompt', () => {
             describe('with a default value', () => {
                 beforeEach(() => {
                     callback = vi.fn();
-                    dialog = bootbox.prompt({
+                    const _dialog = bootbox.prompt({
                         title: 'What is your IDE?',
                         callback: callback,
                         value: 1,
@@ -2065,7 +2082,9 @@ describe('bootbox.prompt', () => {
                             }
                         ]
                     });
-                    const modalInstance = bootstrap.Modal.getInstance(dialog);
+
+                dialog = _dialog._element;
+                    const modalInstance = _dialog._modal;
 
                     hidden = vi.spyOn(modalInstance, 'hide');
                 });
@@ -2116,12 +2135,14 @@ describe('bootbox.prompt', () => {
             describe('without a default value', () => {
                 beforeEach(() => {
                     callback = vi.fn();
-                    dialog = bootbox.prompt({
+                    const _dialog = bootbox.prompt({
                         title: 'What is your email?',
                         inputType: 'email',
                         callback: callback
                     });
-                    const modalInstance = bootstrap.Modal.getInstance(dialog);
+
+                dialog = _dialog._element;
+                    const modalInstance = _dialog._modal;
 
                     hidden = vi.spyOn(modalInstance, 'hide');
                 });
@@ -2181,13 +2202,15 @@ describe('bootbox.prompt', () => {
             describe('with a default value', () => {
                 beforeEach(() => {
                     callback = vi.fn();
-                    dialog = bootbox.prompt({
+                    const _dialog = bootbox.prompt({
                         title: 'What is your email?',
                         inputType: 'email',
                         value: 'john@smith.com',
                         callback: callback
                     });
-                    const modalInstance = bootstrap.Modal.getInstance(dialog);
+
+                dialog = _dialog._element;
+                    const modalInstance = _dialog._modal;
 
                     hidden = vi.spyOn(modalInstance, 'hide');
                 });
@@ -2245,7 +2268,7 @@ describe('bootbox.prompt', () => {
             describe('without a default value', () => {
                 beforeEach(() => {
                     callback = vi.fn();
-                    dialog = bootbox.prompt({
+                    const _dialog = bootbox.prompt({
                         title: 'What is your IDE?',
                         inputType: 'checkbox',
                         inputOptions: [
@@ -2265,7 +2288,9 @@ describe('bootbox.prompt', () => {
                         ],
                         callback: callback
                     });
-                    const modalInstance = bootstrap.Modal.getInstance(dialog);
+
+                dialog = _dialog._element;
+                    const modalInstance = _dialog._modal;
 
                     hidden = vi.spyOn(modalInstance, 'hide');
                 });
@@ -2298,7 +2323,7 @@ describe('bootbox.prompt', () => {
                 describe('one value checked', () => {
                     beforeEach(() => {
                         callback = vi.fn();
-                        dialog = bootbox.prompt({
+                        const _dialog = bootbox.prompt({
                             title: 'What is your IDE?',
                             callback: callback,
                             value: 2,
@@ -2319,7 +2344,9 @@ describe('bootbox.prompt', () => {
                                 }
                             ]
                         });
-                        const modalInstance = bootstrap.Modal.getInstance(dialog);
+
+                dialog = _dialog._element;
+                        const modalInstance = _dialog._modal;
 
                         hidden = vi.spyOn(modalInstance, 'hide');
                     });
@@ -2374,7 +2401,7 @@ describe('bootbox.prompt', () => {
                 describe('multiple value checked', () => {
                     beforeEach(() => {
                         callback = vi.fn();
-                        dialog = bootbox.prompt({
+                        const _dialog = bootbox.prompt({
                             title: 'What is your IDE?',
                             callback: callback,
                             value: [2, 3],
@@ -2395,7 +2422,9 @@ describe('bootbox.prompt', () => {
                                 }
                             ]
                         });
-                        const modalInstance = bootstrap.Modal.getInstance(dialog);
+                        
+                        dialog = _dialog._element;
+                        const modalInstance = _dialog._modal;
 
                         hidden = vi.spyOn(modalInstance, 'hide');
                     });
@@ -2463,7 +2492,7 @@ describe('bootbox.prompt', () => {
             describe('without a default value', () => {
                 beforeEach(() => {
                     callback = vi.fn();
-                    dialog = bootbox.prompt({
+                    const _dialog = bootbox.prompt({
                         title: 'What is your IDE?',
                         inputType: 'radio',
                         inputOptions: [
@@ -2483,7 +2512,9 @@ describe('bootbox.prompt', () => {
                         ],
                         callback: callback
                     });
-                    const modalInstance = bootstrap.Modal.getInstance(dialog);
+                    
+                    dialog = _dialog._element;
+                    const modalInstance = _dialog._modal;
 
                     hidden = vi.spyOn(modalInstance, 'hide');
                 });
@@ -2513,7 +2544,7 @@ describe('bootbox.prompt', () => {
                 describe('one value checked', () => {
                     beforeEach(() => {
                         callback = vi.fn();
-                        dialog = bootbox.prompt({
+                        const _dialog = bootbox.prompt({
                             title: 'What is your IDE?',
                             callback: callback,
                             value: 2,
@@ -2534,7 +2565,9 @@ describe('bootbox.prompt', () => {
                                 }
                             ]
                         });
-                        const modalInstance = bootstrap.Modal.getInstance(dialog);
+                        
+                        dialog = _dialog._element;
+                        const modalInstance = _dialog._modal;
 
                         hidden = vi.spyOn(modalInstance, 'hide');
                     });

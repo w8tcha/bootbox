@@ -310,11 +310,13 @@ describe('bootbox.dialog', () => {
     describe('with a simple callback', () => {
       beforeEach(() => {
         callback = vi.fn();
-        dialog = bootbox.dialog({
+        const _dialog = bootbox.dialog({
           message: 'Are you sure?',
           onEscape: callback
-        })._element;
-        const modalInstance = bootstrap.Modal.getInstance(dialog)!;
+        });
+
+        dialog = _dialog._element;
+        const modalInstance = _dialog._modal;
                 
          hidden = vi.spyOn(modalInstance, 'hide');
       });
@@ -346,11 +348,13 @@ describe('bootbox.dialog', () => {
      describe('with a callback which returns false', () => {
       beforeEach(() => {
         callback = vi.fn().mockReturnValue(false);
-        dialog = bootbox.dialog({
+        const _dialog = bootbox.dialog({
           message: 'Are you sure?',
           onEscape: callback
-        })._element;
-        const modalInstance = bootstrap.Modal.getInstance(dialog);
+        });
+
+        dialog = _dialog._element;
+        const modalInstance = _dialog._modal;
                 
         hidden = vi.spyOn(modalInstance, 'hide');
       });

@@ -197,11 +197,13 @@ describe('bootbox.alert', () => {
 			describe('with no callback',
 				() => {
 					beforeEach(() => {
-						dialog = bootbox.alert({
+						const _dialog = bootbox.alert({
 							message: 'Hello!'
-						})._element;
+						});
 
-						const modalInstance = bootstrap.Modal.getInstance(dialog)!;
+						dialog = _dialog._element;
+
+						const modalInstance = _dialog._modal;
 						hidden = vi.spyOn(modalInstance, 'hide');
 					});
 
@@ -249,12 +251,14 @@ describe('bootbox.alert', () => {
 					beforeEach(() => {
 						callback = vi.fn();
 
-						dialog = bootbox.alert({
+						const _dialog = bootbox.alert({
 							message: 'Hello!',
 							callback: callback
-						})._element;
+						});
 
-						const modalInstance = bootstrap.Modal.getInstance(dialog);
+						dialog = _dialog._element;
+						const modalInstance = _dialog._modal;
+
 						hidden = vi.spyOn(modalInstance, 'hide');
 					});
 
@@ -332,12 +336,14 @@ describe('bootbox.alert', () => {
 					beforeEach(() => {
 						callback = vi.fn().mockReturnValue(false);
 
-						dialog = bootbox.alert({
+						const _dialog = bootbox.alert({
 							message: 'Hello!',
 							callback: callback
-						})._element;
+						});
 
-						const modalInstance = bootstrap.Modal.getInstance(dialog)!;
+						dialog = _dialog._element;
+						const modalInstance = _dialog._modal;
+						
 						hidden = vi.spyOn(modalInstance, 'hide');
 					});
 

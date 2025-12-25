@@ -143,7 +143,7 @@ describe('bootbox.confirm',
 								});
 								it('creates a dialog object',
 									() => {
-										expect(bootstrap.Modal.getInstance(dialog)).to.be.an('object');
+										expect(bootstrap.Modal.getInstance(dialog!)).to.be.an('object');
 									});
 								it('applies the bootbox-confirm class to the dialog',
 									() => {
@@ -259,12 +259,14 @@ describe('bootbox.confirm',
 					() => {
 						beforeEach(() => {
 							callback = vi.fn(() => true);
-							dialog = bootbox.confirm({
+							const _dialog = bootbox.confirm({
 								message: 'Are you sure?',
 								callback: callback
-							})._element;
+							});
 
-							const modalInstance = bootstrap.Modal.getInstance(dialog);
+							dialog = _dialog._element;
+							const modalInstance = _dialog._modal;
+
 							hidden = vi.spyOn(modalInstance, 'hide');
 						});
 
@@ -344,12 +346,13 @@ describe('bootbox.confirm',
 					() => {
 						beforeEach(() => {
 							callback = vi.fn(() => false);
-							dialog = bootbox.confirm({
+							const _dialog = bootbox.confirm({
 								message: 'Are you sure?',
 								callback: callback
-							})._element;
+							});
 
-							const modalInstance = bootstrap.Modal.getInstance(dialog);
+							dialog = _dialog._element;
+							const modalInstance = _dialog._modal;
 
 							hidden = vi.spyOn(modalInstance, 'hide');
 						});
