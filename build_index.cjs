@@ -64,7 +64,7 @@ function readHtml(root, file) {
     
     section_anchor = $(topics[i]).find('.topic-anchor')[0];
 
-    var file = filename.replace('docs\\', '/').replace('.html', '');
+    var file = filename.replace('docs\\', './').replace('.html', '');
 
                 if (section_anchor){
                     section_href = section_anchor.attribs.id;
