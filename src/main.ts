@@ -255,10 +255,10 @@ function lunrSearch(term: string): void {
                             ) +
                             '&hellip;';
                     } else {
-                        excerpt = docBody.substring(0, 60) + '&hellip;';
+                        excerpt = `${docBody.substring(0, 60)}&hellip;`;
                     }
                 } else {
-                    excerpt = docBody.substring(0, 60) + '&hellip;';
+                    excerpt = `${docBody.substring(0, 60)}&hellip;`;
                 }
 
                 // Highlight matches (mark.js)
