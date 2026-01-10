@@ -5,3 +5,4 @@ tests
 .vs
 .vscode
 /tmp
+package-lock.json
