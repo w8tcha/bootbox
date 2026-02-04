@@ -312,7 +312,7 @@ function ze() {
 function Me(t) {
   return Me();
 }
-function L(t) {
+function k(t) {
   if (E.Modal === void 0)
     throw new Error(
       '"bootstrap.Modal" is not defined; please double check you have included the Bootstrap JavaScript library. See https://getbootstrap.com/docs/5.3/getting-started/introduction/ for more details.'
@@ -415,20 +415,20 @@ function L(t) {
   e.addEventListener(
     "escape.close.bb",
     (l) => {
-      u.onEscape && A(l, e, u.onEscape);
+      u.onEscape && L(l, e, u.onEscape);
     }
   ), e.addEventListener(
     "click",
     (l) => {
       if (l.target.nodeName.toLowerCase() === "button" && !l.target.classList.contains("disabled")) {
         const d = l.target.dataset.bbHandler;
-        d !== void 0 && A(l, e, u[d]);
+        d !== void 0 && L(l, e, u[d]);
       }
     }
   ), document.addEventListener(
     "click",
     (l) => {
-      l.target.closest(".bootbox-close-button") && A(l, e, u.onEscape);
+      l.target.closest(".bootbox-close-button") && L(l, e, u.onEscape);
     }
   ), e.addEventListener(
     "keyup",
@@ -447,27 +447,27 @@ function L(t) {
   return t.show && (t.relatedTarget ? C.show(t.relatedTarget) : C.show()), { _element: e, _modal: C, _options: t };
 }
 function $e(...t) {
-  const e = k("alert", ["ok"], ["message", "callback"], t);
+  const e = x("alert", ["ok"], ["message", "callback"], t);
   if (e.callback && typeof e.callback != "function")
     throw new Error('alert requires the "callback" property to be a function when provided');
   return e.buttons.ok.callback = e.onEscape = function() {
     return typeof e.callback == "function" ? e.callback.call(this) : !0;
-  }, L(e);
+  }, k(e);
 }
 function Ue(...t) {
   let e;
-  if (e = k("confirm", ["cancel", "confirm"], ["message", "callback"], t), typeof e.callback != "function")
+  if (e = x("confirm", ["cancel", "confirm"], ["message", "callback"], t), typeof e.callback != "function")
     throw new Error("confirm requires a callback");
   let o = e.buttons.cancel, a = e.buttons.confirm;
   return a || (e.buttons.confirm = N("confirm", e.locale), a = e.buttons.confirm), o || (e.buttons.cancel = N("cancel", e.locale), o = e.buttons.cancel), o.callback = e.onEscape = function() {
     return e.callback?.call(this, null);
   }, a.callback = function() {
     return e.callback?.call(this, !0);
-  }, e.buttons.cancel = o, e.buttons.confirm = a, L(e);
+  }, e.buttons.cancel = o, e.buttons.confirm = a, k(e);
 }
 function Ge(...t) {
   let e, o, a, r, n, i;
-  a = b(p.form), e = k("prompt", ["cancel", "confirm"], ["title", "callback"], t), e.value || (e.value = O.value), e.inputType || (e.inputType = O.inputType), n = e.show === void 0 ? O.show : e.show, e.show = !1;
+  a = b(p.form), e = x("prompt", ["cancel", "confirm"], ["title", "callback"], t), e.value || (e.value = O.value), e.inputType || (e.inputType = O.inputType), n = e.show === void 0 ? O.show : e.show, e.show = !1;
   var u = e.buttons.cancel;
   u || (e.buttons.cancel = N("cancel", e.locale), u = e.buttons.cancel), u.callback = e.onEscape = function() {
     return e.callback?.call(this, null);
@@ -595,15 +595,15 @@ ${s.text}`), e.value !== void 0 && s.value === e.value && (f.querySelector("inpu
     a.prepend(c), e.messageForm = a;
   } else
     e.messageForm = a;
-  const x = L(e);
-  o = x._element, o.removeEventListener("shown.bs.modal", S), o.addEventListener(
+  const A = k(e);
+  o = A._element, o.removeEventListener("shown.bs.modal", S), o.addEventListener(
     "shown.bs.modal",
     () => {
       r.focus();
     }
   );
-  const q = x._modal;
-  return n === !0 && q.show(), o;
+  const q = A._modal;
+  return n === !0 && q.show(), A;
 }
 function I(...t) {
   const e = {};
@@ -637,7 +637,7 @@ function Fe(t, e, o) {
     // Map array to object if necessary
   );
 }
-function k(t, e, o, a) {
+function x(t, e, o, a) {
   let r;
   a && a[0] && (r = a[0].locale || O.locale, (a[0].swapButtonOrder || O.swapButtonOrder) && (e = e.reverse()));
   const n = {
@@ -721,7 +721,7 @@ function S(t) {
 function R(t) {
   return Object.keys(t).length;
 }
-function A(t, e, o) {
+function L(t, e, o) {
   t.stopPropagation(), t.preventDefault(), !(typeof o == "function" && o.call(e, t) === !1) && e && E.Modal.getInstance(e)?.hide();
 }
 function Te(t, e, o) {
@@ -772,7 +772,7 @@ export {
   _e as addLocale,
   $e as alert,
   Ue as confirm,
-  L as dialog,
+  k as dialog,
   He as getAllLocales,
   Pe as getLocale,
   ze as hideAll,

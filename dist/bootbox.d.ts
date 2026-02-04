@@ -80,5 +80,9 @@ declare function confirm(...args: any[]): {
  * Helper function to simulate the native prompt() behavior. **NOTE**: This is non-blocking, so any code that must happen after the prompt is dismissed should be placed within the callback function for this prompt.
  * @returns an object upon which Bootstrap's modal function has been called
  */
-declare function prompt(...args: any[]): HTMLElement;
+declare function prompt(...args: any[]): {
+    _element: HTMLElement;
+    _modal: bootstrap.Modal;
+    _options: Options;
+};
 export { VERSION, getAllLocales, getLocale, addLocale, removeLocale, setLocale, setDefaults, hideAll, dialog, alert, confirm, prompt, initFn as init };
