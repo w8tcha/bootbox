@@ -135,7 +135,7 @@ describe('bootbox.dialog', () => {
         beforeEach(() => {
            // https://github.com/jsdom/jsdom/issues/3331
 					 const Event = window.Event;
-           dialog?.dispatchEvent(new Event('escape.close.bb'));
+           dialog?.dispatchEvent(new CustomEvent('escape.close.bb'));
         });
          it('should not hide the modal', () => {
            expect(hidden).not.toHaveBeenCalled();
@@ -185,7 +185,7 @@ describe('bootbox.dialog', () => {
         beforeEach(() => {
            // https://github.com/jsdom/jsdom/issues/3331
 					 const Event = window.Event;
-					 dialog?.dispatchEvent(new Event('escape.close.bb'));
+					 dialog?.dispatchEvent(new CustomEvent('escape.close.bb'));
         });
         it('should not invoke the callback', () => {
            expect(callback).not.toHaveBeenCalled();
