@@ -236,7 +236,7 @@ describe('bootbox.alert', () => {
 							beforeEach(() => {
 								// https://github.com/jsdom/jsdom/issues/3331
 								const Event = window.Event;
-								dialog?.dispatchEvent(new Event('escape.close.bb'));
+								dialog?.dispatchEvent(new CustomEvent('escape.close.bb'));
 							});
 
 							it('should hide the modal',
@@ -311,7 +311,7 @@ describe('bootbox.alert', () => {
 							beforeEach(() => {
 								// https://github.com/jsdom/jsdom/issues/3331
 								const Event = window.Event;
-								dialog?.dispatchEvent(new Event('escape.close.bb'));
+								dialog?.dispatchEvent(new CustomEvent('escape.close.bb'));
 							});
 
 							it('should invoke the callback',
@@ -396,7 +396,7 @@ describe('bootbox.alert', () => {
 							beforeEach(() => {
 								// https://github.com/jsdom/jsdom/issues/3331
 								const Event = window.Event;
-								dialog?.dispatchEvent(new Event('escape.close.bb'));
+								dialog?.dispatchEvent(new CustomEvent('escape.close.bb'));
 							});
 
 							it('should invoke the callback',

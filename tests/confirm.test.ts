@@ -321,7 +321,7 @@ describe('bootbox.confirm',
 								beforeEach(() => {
 								// https://github.com/jsdom/jsdom/issues/3331
 								const Event = window.Event;
-								return dialog?.dispatchEvent(new Event('escape.close.bb'));
+								return dialog?.dispatchEvent(new CustomEvent('escape.close.bb'));
 								});
 								it('should invoke the callback',
 									() => {
@@ -407,7 +407,7 @@ describe('bootbox.confirm',
 							() => {
 								beforeEach(() => {
 									// https://github.com/jsdom/jsdom/issues/3331
-									const CustomEvent = window.CustomEvent;
+									const CustomEvent = window.Event;
 									dialog?.dispatchEvent(new CustomEvent('escape.close.bb'));
 								});
 								it('should invoke the callback',
