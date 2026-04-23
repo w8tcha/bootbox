@@ -1,6 +1,5 @@
 import {describe,beforeEach, afterEach, it, expect, vi} from  'vitest';
 import * as bootbox from '../src/bootbox';
-import * as bootstrap from 'bootstrap';
 import Options from '../src/interfaces/Options';
 
 let dialog: HTMLElement | null;
