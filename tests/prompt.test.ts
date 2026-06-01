@@ -1157,7 +1157,7 @@ describe('bootbox.prompt', () => {
                     beforeEach(() => {
                         // https://github.com/jsdom/jsdom/issues/3331
 						const Event = window.Event;
-                        dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit'))
+                        dialog?.querySelector('.bootbox-form')?.dispatchEvent(new CustomEvent('submit'))
                     });
                     it('invokes the callback with the correct value', () => {
                         expect(callback).toHaveBeenCalledWith('');
@@ -1192,7 +1192,7 @@ describe('bootbox.prompt', () => {
                         {
                             // https://github.com/jsdom/jsdom/issues/3331
 							const Event = window.Event;
-							dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit'))
+							dialog?.querySelector('.bootbox-form')?.dispatchEvent(new CustomEvent('submit'))
                         });
                     it('invokes the callback with the correct value', () => {
                         expect(callback).toHaveBeenCalledWith('Test input');
@@ -1224,7 +1224,7 @@ describe('bootbox.prompt', () => {
                 beforeEach(() => {
                     // https://github.com/jsdom/jsdom/issues/3331
 					const Event = window.Event;
-					dialog?.dispatchEvent(new Event('escape.close.bb'))
+					dialog?.dispatchEvent(new CustomEvent('escape.close.bb'))
                 });
                 it('should invoke the callback', () => {
                     expect(callback).toHaveBeenCalled();
@@ -1325,7 +1325,7 @@ describe('bootbox.prompt', () => {
                 beforeEach(() => {
                     // https://github.com/jsdom/jsdom/issues/3331
 					const Event = window.Event;
-					dialog?.dispatchEvent(new Event('escape.close.bb'))
+					dialog?.dispatchEvent(new CustomEvent('escape.close.bb'))
                 });
                 it('should invoke the callback', () => {
                     expect(callback).toHaveBeenCalled();
@@ -2165,7 +2165,7 @@ describe('bootbox.prompt', () => {
                     beforeEach(() => {
                         // https://github.com/jsdom/jsdom/issues/3331
 						const Event = window.Event;
-						dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit'))}
+						dialog?.querySelector('.bootbox-form')?.dispatchEvent(new CustomEvent('submit'))}
                     );
                     it('invokes the callback with the correct value', () => {
                         expect(callback).toHaveBeenCalledWith('');
@@ -2230,7 +2230,7 @@ describe('bootbox.prompt', () => {
                     beforeEach(() => {
                         // https://github.com/jsdom/jsdom/issues/3331
 						const Event = window.Event;
-						dialog?.querySelector('.bootbox-form')?.dispatchEvent(new Event('submit'))
+						dialog?.querySelector('.bootbox-form')?.dispatchEvent(new CustomEvent('submit'))
                     });
                     it('invokes the callback with the correct value', () => {
                         expect(callback).toHaveBeenCalledWith('john@smith.com');
