@@ -30,11 +30,11 @@
   "devDependencies": {
     "@types/bootstrap": "^5.2.11",
     "jsdom": "^29.1.1",
-    "typescript": "^6.0.3",
-    "vite": "^8.1.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.1.4",
     "vite-plugin-banner": "^0.8.1",
     "vite-plugin-dts": "^5.0.3",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "@popperjs/core": "^2.0.0",
