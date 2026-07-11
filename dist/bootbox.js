@@ -410,7 +410,7 @@ function ye(...e) {
 	let t = G("alert", ["ok"], ["message", "callback"], e);
 	if (t.callback && typeof t.callback != "function") throw Error("alert requires the \"callback\" property to be a function when provided");
 	return t.buttons.ok.callback = t.onEscape = function() {
-		return typeof t.callback == "function" ? t.callback.call(this) : !0;
+		return typeof t.callback != "function" || t.callback.call(this);
 	}, U(t);
 }
 function be(...e) {
