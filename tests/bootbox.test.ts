@@ -22,7 +22,6 @@ describe('Bootbox',
 
 							e = (targetObject: any) => {
 								// https://github.com/jsdom/jsdom/issues/3331
-								const CustomEvent = window.CustomEvent;
 								dialog?.dispatchEvent(new CustomEvent('hidden.bs.modal',
 									{ detail: { target: targetObject } }));
 							};
@@ -92,7 +91,6 @@ describe('Bootbox',
 
 							e = (target: any) => {
 								// https://github.com/jsdom/jsdom/issues/3331
-								const Event = window.Event;
 								dialog?.dispatchEvent(new CustomEvent('hidden.bs.modal',
 									{
 										target: target
@@ -398,7 +396,6 @@ describe('Bootbox',
 
 							e = (target: any) => {
 								// https://github.com/jsdom/jsdom/issues/3331
-								const Event = window.Event;
 								dialog?.dispatchEvent(new CustomEvent('hidden.bs.modal',
 									{
 										target: target
@@ -435,8 +432,7 @@ describe('Bootbox',
 
 							e = (target: any) => {
 								// https://github.com/jsdom/jsdom/issues/3331
-						        const Event = window.Event;
-								dialog?.dispatchEvent(new CustomEvent('hidden.bs.modal',
+						        dialog?.dispatchEvent(new CustomEvent('hidden.bs.modal',
 									{
 										target: target
 									}));
