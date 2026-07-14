@@ -14,19 +14,13 @@ Please see the [CONTRIBUTING](https://github.com/bootboxjs/bootbox/blob/master/C
 
 ## Running Tests
 
-Tests are run using [Karma](http://karma-runner.github.io/0.8/index.html) using the Mocha test adapter. To run the tests yourself, simply run 
+Tests are run using [Vitest](https://vitest.dev).  To run the tests yourself, simply run 
 
 ```
-npm i w8tcha/bootbox
-``` 
-
-within the project followed by 
-
-```
-npm test
+npm run test
 ```
 
-Tests are run against the generated files contained in the `/dist` directory - regenerate those files and run the Karma tests by simply running Grunt:
+Tests are run against the generated files contained in the `/dist` directory - compile them using `Vite`:
 
 ```
 npm run build
