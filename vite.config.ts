@@ -9,7 +9,18 @@ export default defineConfig({
     }
   },
 	css: {
-		postcss: {
+		preprocessorOptions: {
+			scss: {
+        api: "modern-compiler",
+        silenceDeprecations: [
+          "color-functions",
+          "global-builtin",
+          "if-function",
+          "import",
+        ],
+      },
+    },
+    postcss: {
 			plugins: [
 				autoprefixer({}) // add options if needed
 			],
