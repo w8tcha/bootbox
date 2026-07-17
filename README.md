@@ -5,7 +5,7 @@ FORKED Version using Vanilla Javascript instead of jQuery
 [![NPM Version](http://img.shields.io/npm/v/@w8tcha/bootbox.svg?style=flat)](https://npmjs.org/package/@w8tcha/bootbox)
 [![NPM Downloads](http://img.shields.io/npm/dm/@w8tcha/bootbox.svg?style=flat)](https://npmjs.org/package/@w8tcha/bootbox)
 
-Please see http://bootboxjs.com for full usage instructions, or head over to http://paynedigital.com/bootbox for
+Please see https://w8tcha.github.io/bootbox/ for full usage instructions, or head over to http://paynedigital.com/bootbox for
 the original writeup about the project.
 
 ## Contributing
