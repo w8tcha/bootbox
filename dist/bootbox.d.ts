@@ -47,7 +47,7 @@ declare function hideAll(): void;
  * @param {function} _$ - A function to be called when the bootbox instance is created
  * @returns The current bootbox object
  */
-declare function initFn(_$: any): any;
+declare function initFn(_$?: any): any;
 /**
  * The core dialog helper function, which can be used to create any custom Bootstrap modal.
  * @param {Object} options - An object used to configure the various properties which define a Bootbox dialog
