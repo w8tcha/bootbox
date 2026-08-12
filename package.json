@@ -10,11 +10,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "update-deps": "npx npm-check-updates -u"
+    "update-deps": "set npm_config_allow_scripts=&& npm-check -y"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.1",
-    "@w8tcha/bootbox": "^6.0.7",
+    "@w8tcha/bootbox": "^6.0.8",
     "anchor-js": "^5.0.0",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.3.8",
