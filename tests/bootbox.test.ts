@@ -255,8 +255,10 @@ describe('Bootbox',
 			() => {
 				beforeEach(() => {
 					e = target => {
-						const dismissEvent = new CustomEvent('click.dismiss.bs.modal', { detail: { target: target } });
-						dialog?.dispatchEvent(dismissEvent);
+						// A real backdrop click bubbles up to the dialog element itself with
+						// event.target === event.currentTarget === dialog (see bootbox.ts's own click trap).
+						const clickEvent = new MouseEvent('click', { bubbles: true });
+						dialog?.dispatchEvent(clickEvent);
 					};
 				});
 

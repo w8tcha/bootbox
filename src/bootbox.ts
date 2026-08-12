@@ -22,7 +22,7 @@ const defaults = DEFAULT_OPTIONS;
  * @returns {(Locale)} a single locale object.
  */
 function getLocale(languageCode: string): Locale {
-	return locales[languageCode];
+	return locales[normalizeLocaleName(languageCode)];
 }
 
 /**
@@ -73,11 +73,17 @@ function removeLocale (name: string) {
 		 */
 function setLocale (name:string) {
     if (name) {
-        name = name.replace('-', '');
+        name = normalizeLocaleName(name);
     }
 
 	return setDefaults('locale', name);
 };
+
+// Normalize a locale code to the internal camelCase key used in the locales map,
+// e.g. "bg-BG" / "bg_BG" -> "bgBG"
+function normalizeLocaleName(name: string): string {
+	return name.replace(/[-_]/g, '');
+}
 
 
 /**
@@ -118,8 +124,8 @@ function hideAll(): void {
  * @param {function} _$ - A function to be called when the bootbox instance is created
  * @returns The current bootbox object
  */
-function initFn(_$:any): any {
-	return initFn(_$ || bootstrap);
+function initFn(_$?:any): any {
+	return _$ || bootstrap;
 }
 
 // CORE HELPER FUNCTIONS
@@ -264,16 +270,8 @@ function dialog (options: Options) {
     // Bootstrap event listeners; these handle extra setup & teardown required after the underlying modal has performed certain actions.
 
     if (!options.reusable) {
-        // make sure we unbind any listeners once the dialog has definitively been dismissed
-        dialog.addEventListener('hide.bs.modal',
-            e => {
-	            if (e.target === dialog) {
-		            dialog.removeEventListener('escape.close.bb', () => {});
-		            dialog.removeEventListener('click', () => {});
-	            }
-            },
-            { once: true });
-
+        // make sure the dialog is definitively removed from the DOM once dismissed,
+        // which also allows its event listeners to be garbage collected
         dialog.addEventListener('hidden.bs.modal',
             e => {
                 if (e.target === dialog) {
@@ -334,9 +332,10 @@ function dialog (options: Options) {
             }, '.modal-content');
 
         // A boolean true/false according to the Bootstrap docs should show a dialog the user can dismiss by clicking on the background.
-        // We always only ever pass static/false to the actual $.modal function because with "true" we can't trap this event (the .modal-backdrop swallows it).
-        // However, we still want to sort-of respect true and invoke the escape mechanism instead
-        addEventListener(dialog, 'click.dismiss.bs.modal', e => {
+        // We always only ever pass static/false to the actual bootstrap.Modal constructor because with "true" we can't trap this event
+        // (Bootstrap would hide the dialog itself, bypassing our callbacks). Instead we sort-of respect true ourselves and invoke the
+        // escape mechanism, so onEscape/cancel callbacks still run.
+        addEventListener(dialog, 'click', e => {
 	        if (startedOnBody || e.target !== e.currentTarget) {
 		        return;
 	        }
@@ -354,6 +353,11 @@ function dialog (options: Options) {
 
     dialog.addEventListener('click',
         (e: any) => {
+            if (e.target.closest('.bootbox-close-button')) {
+                processCallback(e, dialog, callbacks.onEscape);
+                return;
+            }
+
             if (e.target.nodeName.toLowerCase() === 'button' && !e.target.classList.contains('disabled')) {
                 const callbackKey = e.target.dataset.bbHandler;
 
@@ -362,14 +366,6 @@ function dialog (options: Options) {
                     // Only process callbacks for buttons we recognize:
                     processCallback(e, dialog, callbacks[callbackKey]);
                 }
-            }
-        });
-
-
-    document.addEventListener('click',
-        (e: any) => {
-            if (e.target.closest('.bootbox-close-button')) {
-                processCallback(e, dialog, callbacks.onEscape);
             }
         });
 
@@ -393,7 +389,9 @@ function dialog (options: Options) {
 
     const modal = new bootstrap.Modal(dialog,
         {
-            backdrop: options.backdrop,
+            // Never pass boolean true through to Bootstrap: with a real "true" backdrop, Bootstrap hides the
+            // modal itself on backdrop click, bypassing our onEscape/cancel callbacks (see the 'click' trap above).
+            backdrop: options.backdrop === false ? false : 'static',
             keyboard: false,
             //show: false
         });
@@ -657,10 +655,10 @@ function prompt(...args: any[]) {
 		} else {
 			if (options.inputType === 'date') {
 				// Add the ISO-8601 short date format as a fallback for browsers without native type="date" support
-				input.setAttribute('pattern', '\d{4}-\d{2}-\d{2}');
+				input.setAttribute('pattern', '\\d{4}-\\d{2}-\\d{2}');
 			} else if (options.inputType === 'time') {
 				// Add an HH:MM pattern as a fallback for browsers without native type="time" support
-				input.setAttribute('pattern', '\d{2}:\d{2}');
+				input.setAttribute('pattern', '\\d{2}:\\d{2}');
 			}
 		}
 

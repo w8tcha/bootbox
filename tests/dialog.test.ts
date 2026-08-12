@@ -372,7 +372,7 @@ describe('bootbox.dialog', () => {
       });
        describe('when clicking the escape button', () => {
         beforeEach(() => {
-           document.querySelector<HTMLElement>('.btn-close')?.click();
+           dialog?.querySelector<HTMLElement>('.btn-close')?.click();
         });
         it('should invoke the callback', () => {
            expect(callback).toHaveBeenCalled();
