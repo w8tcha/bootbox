@@ -1,11 +1,12 @@
+import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
 	resolve: {
     alias: {
-      '~bootstrap': './node_modules/bootstrap',
-	  '~animate': './node_modules/animate.css',
+      '~bootstrap': fileURLToPath(new URL('./node_modules/bootstrap', import.meta.url)),
+	  '~animate': fileURLToPath(new URL('./node_modules/animate.css', import.meta.url)),
     }
   },
 	css: {
