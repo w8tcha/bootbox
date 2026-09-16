@@ -28,12 +28,12 @@
     "@types/bootstrap": "^5.2.11",
     "@types/lunr": "^2.3.7",
     "@types/prismjs": "^1.26.6",
-    "autoprefixer": "^10.5.5",
+    "autoprefixer": "^10.6.1",
     "cheerio": "^1.2.0",
-    "sass-embedded": "^1.104.0",
+    "sass-embedded": "^1.104.1",
     "sharp": "^0.35.4",
     "typescript": "^7.0.2",
-    "vite": "^8.2.2",
+    "vite": "^8.3.0",
     "vite-plugin-favicon": "^1.0.8"
   }
 }
