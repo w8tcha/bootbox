@@ -30,10 +30,10 @@
     "@types/prismjs": "^1.26.6",
     "autoprefixer": "^10.6.2",
     "cheerio": "^1.2.0",
-    "sass-embedded": "^1.107.1",
+    "sass-embedded": "^1.108.1",
     "sharp": "^0.35.5",
     "typescript": "^7.0.2",
-    "vite": "^8.3.5",
+    "vite": "^8.3.6",
     "vite-plugin-favicon": "^1.0.8"
   }
 }
