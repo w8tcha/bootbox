@@ -33,7 +33,7 @@
     "sass-embedded": "^1.108.1",
     "sharp": "^0.35.5",
     "typescript": "^7.0.2",
-    "vite": "^8.3.6",
+    "vite": "^8.3.7",
     "vite-plugin-favicon": "^1.0.8"
   }
 }
